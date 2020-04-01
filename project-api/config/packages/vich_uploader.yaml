@@ -1,0 +1,16 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        projectImages:
+            uri_prefix: /images/projectImages
+            upload_destination: '%kernel.project_dir%/public/images/projectImages'
+            namer: Vich\UploaderBundle\Naming\OrignameNamer
+        commentImages:
+            uri_prefix: /images/commentImages
+            upload_destination: '%kernel.project_dir%/public/images/commentImages'
+            namer: Vich\UploaderBundle\Naming\OrignameNamer
+        usersImages:
+            uri_prefix: /images/usersImages
+            upload_destination: '%kernel.project_dir%/public/images/usersImages'
+            namer: Vich\UploaderBundle\Naming\OrignameNamer
