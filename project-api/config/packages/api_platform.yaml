@@ -1,7 +1,27 @@
+#parameters:
+#    env(ELASTICSEARCH_HOST): 'http://localhost/9200'
 api_platform:
+    swagger:
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
+        versions: [3]
     mapping:
-        paths: ['%kernel.project_dir%/src/Entity']
+        paths: ['%kernel.project_dir%/src/Model','%kernel.project_dir%/src/Entity']
+#    elasticsearch:
+#        hosts: ['%env(ELASTICSEARCH_HOST)%']
+#        mapping:
+#            App\Model\Projects:
+#                index: prosperity2020
+#                type:  projects
+#            App\Model\User:
+#                index: prosperity2020
+#                type:  user
+#            App\Model\Ministries:
+#                index: prosperity2020
+#                type:  ministries
+
     patch_formats:
         json: ['application/merge-patch+json']
-    swagger:
-        versions: [3]
+

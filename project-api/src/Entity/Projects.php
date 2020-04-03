@@ -3,17 +3,22 @@
 namespace App\Entity;
 
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use App\Entity\ProjectImages;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+
 
 /**
  * @ApiResource()
+ * @ApiFilter(SearchFilter::class, properties={"id":"exact", "title":"partial","community":"exact","lga":"exact"} )
+ * @ApiFilter(DateFilter::class, properties={"startdate":"exact"})
+ * @ApiFilter(BooleanFilter::class, properties={"makepublic"})
  * @ORM\Entity(repositoryClass="App\Repository\ProjectsRepository")
  */
 class Projects
@@ -27,6 +32,7 @@ class Projects
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
      */
     private $title;
 
@@ -52,6 +58,7 @@ class Projects
 
     /**
      * @ORM\Column(type="date")
+     *
      */
     private $expectedenddate;
 
@@ -93,6 +100,11 @@ class Projects
      * @ApiProperty(iri="http://schema.org/image")
      */
     public $image;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     */
+    private $cost;
 
     public function __construct()
     {
@@ -313,6 +325,18 @@ class Projects
                 $payment->setProjectid(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCost(): ?string
+    {
+        return $this->cost;
+    }
+
+    public function setCost(string $cost): self
+    {
+        $this->cost = $cost;
 
         return $this;
     }
