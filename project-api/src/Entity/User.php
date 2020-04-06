@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -95,7 +96,7 @@ class User implements UserInterface
     public $image;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="array", nullable=true)
      */
     private $roles = [];
 
@@ -103,6 +104,22 @@ class User implements UserInterface
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param bool $isActive
+     */
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
+    }
 
 
     public function __construct($email)
@@ -127,7 +144,7 @@ class User implements UserInterface
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name)
     {
         $this->name = $name;
 
@@ -139,7 +156,7 @@ class User implements UserInterface
         return $this->careerobjs;
     }
 
-    public function setCareerobjs(?string $careerobjs): self
+    public function setCareerobjs(?string $careerobjs)
     {
         $this->careerobjs = $careerobjs;
 
@@ -151,23 +168,21 @@ class User implements UserInterface
         return $this->sex;
     }
 
-    public function setSex(string $sex): self
+    public function setSex(string $sex)
     {
         $this->sex = $sex;
 
         return $this;
     }
 
-    public function getDob(): ?\DateTimeInterface
+    public function getDob(): ?DateTime
     {
         return $this->dob;
     }
 
-    public function setDob(\DateTimeInterface $dob): self
+    public function setDob(DateTime $dob)
     {
         $this->dob = $dob;
-
-        return $this;
     }
 
     public function getPhone(): ?string
@@ -175,7 +190,7 @@ class User implements UserInterface
         return $this->phone;
     }
 
-    public function setPhone(string $phone): self
+    public function setPhone(string $phone)
     {
         $this->phone = $phone;
 
@@ -187,19 +202,19 @@ class User implements UserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
+//    public function setEmail(string $email)
+//    {
+//        $this->email = $email;
+//
+//        return $this;
+//    }
 
-        return $this;
-    }
-
-    public function getPassword(): ?string
+    public function getPassword()
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword($password)
     {
         $this->password = $password;
     }
@@ -358,14 +373,12 @@ class User implements UserInterface
 
     public function getRoles(): ?array
     {
-        return $this->roles;
+        return array($this->roles);
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
-
-        return $this;
     }
 
     /**
@@ -381,7 +394,7 @@ class User implements UserInterface
      */
     public function getUsername()
     {
-        return array('ROLE_USER');
+        return $this->getEmail();
     }
 
     /**
