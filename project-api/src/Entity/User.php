@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
@@ -52,14 +53,23 @@ class User implements UserInterface
     private $phone;
 
     /**
+     * @Assert"\NotBlanck()
+     * @Assert\Email()
      * @ORM\Column(type="string", length=30, unique=true, nullable=false)
      */
     private $email;
 
     /**
+     * @Assert"\NotBlanck()
      * @ORM\Column(type="string", length=500)
      */
     private $password;
+
+    /**
+     * @Assert"\NotBlanck()
+     * @Assert\Expression($this->getPassword()==$this.getConfirmpassword(), message="Passwords Does not Match")
+     */
+    private $confirmpassword;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Experience", mappedBy="userid", orphanRemoval=true)
