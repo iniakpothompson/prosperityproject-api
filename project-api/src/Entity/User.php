@@ -13,13 +13,24 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     itemOperations={
+ *          "get"={"access_control"="is_granted('ROLE_COMMENTATOR')"}
+ *     })
  * @ApiFilter(SearchFilter::class, properties={"id":"exact", "name":"exact", "email":"exact"})
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ *
  */
 class User implements UserInterface
 {
+    const ROLE_GOVERNOR='ROLE_GOVERNOR';
+    const ROLE_MINISTRY_DESK_OFFICER='ROLE_MINISTRY_DESK_OFFICER';
+    const ROLE_COMMENTATOR='ROLE_COMMENTATOR';
+    const ROLE_COMMISSIONER='ROLE_COMMISSIONER';
+    const ROLE_ADMIN='ROLE_ADMIN';
+    const DEFAULT_ROLE=[self::ROLE_COMMENTATOR];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -29,6 +40,9 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
+     * @Assert\Length(max="50", maxMessage="Name longer than expected, allowed characters 50")
      */
     private $name;
 
@@ -43,6 +57,11 @@ class User implements UserInterface
     private $sex;
 
     /**
+     * @ORM\Column(type="string", length=30, nullable=false)
+     */
+    private $designation;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $dob;
@@ -53,23 +72,27 @@ class User implements UserInterface
     private $phone;
 
     /**
-     * @Assert"\NotBlanck()
+     * @Assert\NotBlank()
      * @Assert\Email()
+     * @Assert\NotNull()
      * @ORM\Column(type="string", length=30, unique=true, nullable=false)
      */
     private $email;
 
     /**
-     * @Assert"\NotBlanck()
+     *
      * @ORM\Column(type="string", length=500)
      */
     private $password;
 
+
+
     /**
-     * @Assert"\NotBlanck()
-     * @Assert\Expression($this->getPassword()==$this.getConfirmpassword(), message="Passwords Does not Match")
+     *
+     * @Assert\Expression("this.getPassword()==this.getConfirmpassword()", message="Passwords Does not Match")
      */
     private $confirmpassword;
+
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Experience", mappedBy="userid", orphanRemoval=true)
@@ -106,9 +129,9 @@ class User implements UserInterface
     public $image;
 
     /**
-     * @ORM\Column(type="array", nullable=true)
+     * @ORM\Column(type="simple_array", nullable=false, length=200)
      */
-    private $roles = [];
+    private $roles;
 
     /**
      * @ORM\Column(name="is_active", type="boolean")
@@ -139,9 +162,10 @@ class User implements UserInterface
         $this->certgrade = new ArrayCollection();
         $this->projects = new ArrayCollection();
         $this->comments = new ArrayCollection();
-
-        $this->isActive = true;
+        $this->roles=self::DEFAULT_ROLE;
+        $this->isActive = false;
         $this->email = $email;
+        $this->designation='COMMENTATOR';
     }
 
     public function getId(): ?int
@@ -183,6 +207,22 @@ class User implements UserInterface
         $this->sex = $sex;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDesignation()
+    {
+        return $this->designation;
+    }
+
+    /**
+     *
+     */
+    public function setDesignation($designation)
+    {
+        $this->designation = $designation;
     }
 
     public function getDob(): ?DateTime
@@ -381,10 +421,10 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getRoles(): ?array
+    public function getRoles(): array
     {
-        //return array($this->roles);
-        return array('ROLE_USER');
+        return $this->roles;
+//        return array('ROLE_ADMIN');
     }
 
     public function setRoles(array $roles)
@@ -415,4 +455,22 @@ class User implements UserInterface
     {
         // TODO: Implement eraseCredentials() method.
     }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmpassword()
+    {
+        return $this->confirmpassword;
+    }
+
+    /**
+     * @param mixed $confirmpassword
+     */
+    public function setConfirmpassword($confirmpassword)
+    {
+        $this->confirmpassword = $confirmpassword;
+    }
+
+
 }

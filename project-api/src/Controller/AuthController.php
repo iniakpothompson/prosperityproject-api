@@ -29,10 +29,10 @@ class AuthController extends AbstractController
             $e->getMessage();
         }
 
-
+        $desig=$request->request->get('designation');
         $phone=$request->request->get("phone");
         $role=$request->request->get("role");
-        $isActive=$request->request->get("is_active");
+        //$isActive=$request->request->get("is_active");
 
         $user = new User($username);
         $user->setPassword($encoder->encodePassword($user, $password));
@@ -40,10 +40,10 @@ class AuthController extends AbstractController
         $user->setCareerobjs($career);
         $user->setSex($sex);
         $user->setDob($d);
-
+        $user->setDesignation($desig);
         $user->setPhone($phone);
         $user->setRoles(array($role));
-        $user->setIsActive($isActive);
+        //$user->setIsActive($isActive);
 
 
         $em->persist($user);
