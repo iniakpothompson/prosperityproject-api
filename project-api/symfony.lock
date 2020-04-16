@@ -92,8 +92,14 @@
     "doctrine/reflection": {
         "version": "1.2.1"
     },
+    "egulias/email-validator": {
+        "version": "2.1.17"
+    },
     "fig/link-util": {
         "version": "1.1.0"
+    },
+    "gesdinet/jwt-refresh-token-bundle": {
+        "version": "v0.9.1"
     },
     "guzzlehttp/ringphp": {
         "version": "1.1.1"
@@ -175,6 +181,9 @@
     },
     "react/promise": {
         "version": "v2.7.1"
+    },
+    "swiftmailer/swiftmailer": {
+        "version": "v6.2.3"
     },
     "symfony/asset": {
         "version": "v5.0.7"
@@ -366,6 +375,20 @@
     },
     "symfony/string": {
         "version": "v5.0.7"
+    },
+    "symfony/swiftmailer-bundle": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "ae4d22af30bbd484506bc1817c5a3ef72c855b93"
+        },
+        "files": [
+            "./config/packages/dev/swiftmailer.yaml",
+            "./config/packages/swiftmailer.yaml",
+            "./config/packages/test/swiftmailer.yaml"
+        ]
     },
     "symfony/translation-contracts": {
         "version": "v2.0.1"

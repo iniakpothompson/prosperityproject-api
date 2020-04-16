@@ -6,89 +6,130 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     itemOperations={
+ *          "get",
+ *          "delete",
+ *          "put"={
+ *                      "access_control"="is_granted('ROLE_MINISTRY_DESK_OFFICER') and object.user==getUser",
+ *                      " denormalizationContext"={
+ *                                                  "groups"={"edit"}
+ *                                              },
+ *                      "normalizationContext"={
+ *                                              "groups"={"get"}
+ *                                          }
+ *                 }
+ *
+ *     },
+ *     collectionOperations={
+ *          "get"={
+ *                     " normalizationContext"={
+ *                                                  "groups"={"get"}
+ *                                             }
+ *                },
+ *          "post"={"access_control"="is_granted('ROLE_MINISTRY_DESK_OFFICER')"}
+ *
+ *     },
+ *
+ * )
  * @ApiFilter(SearchFilter::class, properties={"id":"exact", "title":"partial","community":"exact","lga":"exact"} )
  * @ApiFilter(DateFilter::class, properties={"startdate":"exact"})
  * @ApiFilter(BooleanFilter::class, properties={"makepublic"})
  * @ORM\Entity(repositoryClass="App\Repository\ProjectsRepository")
  */
-class Projects
+class Projects implements AuthorEntityInterface
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     *
+     * @Groups({"get","edit","get_comment_with_author"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get","edit","get_comment_with_author"})
      */
     private $community;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get","edit","get_comment_with_author"})
      */
     private $location;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get","edit","get_comment_with_author"})
      */
     private $lga;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"get","edit"})
      */
     private $startdate;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"get","edit"})
      *
      */
     private $expectedenddate;
 
     /**
      * @ORM\Column(type="string", length=500)
+     * @Groups({"get","edit"})
      */
     private $projectsummary;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"get","edit"})
      */
     private $makepublic;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Ministries", inversedBy="projectImages")
+     * @Groups({"get"})
      */
     private $ministryid;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="projectImages")
+     * @Groups({"projectcomment_image_get"})
      */
     private $userid;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="projectid", orphanRemoval=true)
+     * @Groups({"get"})
+     * @ApiSubresource()
      */
     private $comments;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ProjectPayments", mappedBy="projectid", orphanRemoval=true)
+     * @Groups({"get"})
      */
     private $payments;
 
@@ -98,13 +139,21 @@ class Projects
      * @ORM\ManyToOne(targetEntity=ProjectImages::class)
      * @ORM\JoinColumn(nullable=true)
      * @ApiProperty(iri="http://schema.org/image")
+     * @Groups({"project_image_get"})
      */
     public $image;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @Groups({"get"})
      */
     private $cost;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="project")
+     * @Groups({"get"})
+     */
+    private $user;
 
     public function __construct()
     {
@@ -289,7 +338,7 @@ class Projects
     {
         if ($this->comments->contains($comment)) {
             $this->comments->removeElement($comment);
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless algety changed)
             if ($comment->getProjectid() === $this) {
                 $comment->setProjectid(null);
             }
@@ -320,7 +369,7 @@ class Projects
     {
         if ($this->payments->contains($payment)) {
             $this->payments->removeElement($payment);
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless algety changed)
             if ($payment->getProjectid() === $this) {
                 $payment->setProjectid(null);
             }
@@ -329,15 +378,28 @@ class Projects
         return $this;
     }
 
-    public function getCost(): ?string
+    public function getCost(): string
     {
         return $this->cost;
     }
 
-    public function setCost(string $cost): self
+    public function setCost(string $cost)
     {
         $this->cost = $cost;
 
         return $this;
     }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(UserInterface $user): AuthorEntityInterface
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+
 }

@@ -3,10 +3,48 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={
+ *                                    "groups"={"get_user_cert"}
+ *
+ *
+ *                            },
+ *     itemOperations={
+ *          "get"={
+ *                  "access_control"="is_granted('ROLE_GOVERNOR') or is_granted('ROLE_COMMISSIONER') or object==user"
+ *          },
+ *          "delete",
+ *          "put"={
+ *                  "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object==user or is_granted('ROLE_ADMIN')",
+ *                  "denormalizationContext"={
+ *                                              "groups"={"edit"}
+ *                                           }
+ *              },
+ *
+ *     },
+ *     collectionOperations={
+ *                      "get"={
+ *                                  "access_control"="is_granted('ROLE_COMMISSIONER') or is_granted('ROLE_GOVERNOR')"
+ *                          },
+ *          "post"={
+ *                      "access_control"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"
+ *                  },
+ *
+ *     "api_users_education_certgrades_get_subresource"={
+ *                                                           "normalizationContext"={
+ *                                                                                  "groups"={"get_user_cert"}
+ *
+ *
+ *                                                                                 }
+ *                                                        }
+ *     }
+ * )
+ *
  * @ORM\Entity(repositoryClass="App\Repository\CertificateRepository")
  */
 class Certificate
@@ -15,30 +53,36 @@ class Certificate
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get_user_cert"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get_user_cert","get_user_edu"})
      */
     private $subject;
 
     /**
      * @ORM\Column(type="string", length=5)
+     * @Groups({"get_user_cert","get_user_edu"})
      */
     private $grade;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Education", inversedBy="certgrade")
      * @ORM\JoinColumn(nullable=false)
+     *@Groups({"get_user_cert"})
      */
     private $educationid;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="certgrade")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="cert")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get_user_cert"})
      */
-    private $userid;
+    private $user;
+
 
     public function getId(): ?int
     {
@@ -81,15 +125,15 @@ class Certificate
         return $this;
     }
 
-    public function getUserid(): ?User
+    public function getUser(): User
     {
-        return $this->userid;
+        return $this->user;
     }
 
-    public function setUserid(?User $userid): self
+    public function setUser(?User $user)
     {
-        $this->userid = $userid;
+        $this->user = $user;
 
-        return $this;
     }
+
 }

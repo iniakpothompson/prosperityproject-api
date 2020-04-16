@@ -14,3 +14,7 @@ vich_uploader:
             uri_prefix: /images/usersImages
             upload_destination: '%kernel.project_dir%/public/images/usersImages'
             namer: Vich\UploaderBundle\Naming\OrignameNamer
+        ministryImages:
+            uri_prefix: /images/ministryImages
+            upload_destination: '%kernel.project_dir%/public/images/ministryImages'
+            namer: Vich\UploaderBundle\Naming\OrignameNamer

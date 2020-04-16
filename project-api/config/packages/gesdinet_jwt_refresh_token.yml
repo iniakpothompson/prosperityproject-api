@@ -1,0 +1,21 @@
+#gesdinet_jwt_refresh_token:
+#    ttl:                  2592000
+#
+#    ttl_update:           false
+#
+#    firewall:             api
+#
+#    user_provider:        ~
+#    user_identity_field: email
+#
+#
+#
+#    # Set another refresh token entity to use instead of default one (Gesdinet\JWTRefreshTokenBundle\Entity\RefreshToken)
+#
+#    refresh_token_entity:  ~
+#
+#
+#
+#    # Set entity manager to use (default: doctrine.orm.entity_manager)
+#
+#    entity_manager:       doctrine.orm.entity_manager

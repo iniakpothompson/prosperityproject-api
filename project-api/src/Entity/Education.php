@@ -3,12 +3,48 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={
+ *                                    "groups"={"get_user_edu"}
+ *                            },
+ *     itemOperations={
+ *          "get"={
+ *                  "access_control"="is_granted('ROLE_GOVERNOR') or is_granted('ROLE_COMMISSIONER') or object==user"
+ *          },
+ *          "delete",
+ *          "put"={
+ *                  "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object==user or is_granted('ROLE_ADMIN')",
+ *                  "denormalizationContext"={
+ *                                              "groups"={"edit"}
+ *                                           }
+ *              },
+ *
+ *     },
+ *     collectionOperations={
+ *                      "get"={
+ *                                  "access_control"="is_granted('ROLE_COMMISSIONER') or is_granted('ROLE_GOVERNOR')"
+ *                          },
+ *          "post"={
+ *                      "access_control"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"
+ *                  },
+ *     "api_users_education_get_subresource"={
+ *                                                       "normalizationContext"={
+ *                                                                              "groups"={"get_user_edu"},
+ *
+ *                                                                          }
+ *                                                    }
+ *
+ *     },
+ *
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\EducationRepository")
  */
 class Education
@@ -17,37 +53,47 @@ class Education
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get_user_edu"})
      */
     private $school;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get_user_edu"})
      */
     private $edulevel;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"get_user_edu"})
      */
     private $startdate;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"get_user_edu"})
      */
     private $enddate;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="education")
      * @ORM\JoinColumn(nullable=false)
+     *@Groups({"get_user_edu"})
      */
     private $userid;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Certificate", mappedBy="educationid", orphanRemoval=true)
+     * @Groups({"get_user_edu"})
+     * @ApiSubresource()
+     *
+     *
      */
     private $certgrade;
 
