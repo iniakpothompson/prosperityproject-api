@@ -64,12 +64,12 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
             throw new NotFoundHttpException();
         }
 
-        $user->setConfirmationToken(null);
-        $user->setIsActive(true);
-        $this->entity->flush();
-//        $this->userConfirmationService->confirmUser(
-//            $confirmationToken->confirmationToken
-//        );
+//        $user->setConfirmationToken(null);
+//        $user->setIsActive(true);
+        //$this->entity->flush();
+        $this->userConfirmationService->confirmUser(
+            $confirmationToken->confirmationToken
+        );
 
         $event->setResponse(new JsonResponse(null, Response::HTTP_OK));
     }

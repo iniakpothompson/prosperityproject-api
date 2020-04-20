@@ -5,8 +5,10 @@ namespace App\EventSubscriber;
 
 
 use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Email\Mailer;
 use App\Entity\User;
 use App\Security\TokenGenerator;
+use App\Security\UserConfirmationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -18,7 +20,7 @@ class UserRegisterSubscriber implements EventSubscriberInterface
     private $encoder;
     private $tokenGenerator;
     private $swiftMailer;
-public function __construct(UserPasswordEncoderInterface $encoder, TokenGenerator $tokenGenerator, \Swift_Mailer $mailer)
+public function __construct(UserPasswordEncoderInterface $encoder, TokenGenerator $tokenGenerator, Mailer $mailer)
 {
     $this->encoder=$encoder;
     $this->tokenGenerator=$tokenGenerator;
@@ -46,10 +48,11 @@ public function __construct(UserPasswordEncoderInterface $encoder, TokenGenerato
         $user->setConfirmationToken($this->tokenGenerator->getRandomSecureToken());
 
         // End email for password reset
-        $message=(new \Swift_Message('Password Reset'))
-            ->setFrom('ayibatonbrapa@gmail.com')
-            ->setTo("ayibatonbrapa@gmail.com")
-            ->setBody('Hi, This is a test Email for password reset');
-        $this->swiftMailer->send($message);
+//        $message=(new \Swift_Message('Password Reset'))
+//            ->setFrom('ayibatonbrapa@gmail.com')
+//            ->setTo("ayibatonbrapa@gmail.com")
+//            ->setBody('Hi, This is a test Email for password reset');
+
+        $this->swiftMailer->sendMail($user);
     }
 }
