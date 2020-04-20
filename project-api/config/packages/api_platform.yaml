@@ -21,6 +21,15 @@ api_platform:
 #            App\Model\Ministries:
 #                index: prosperity2020
 #                type:  ministries
+    eager_loading:
+        enabled: true
+    collection:
+        pagination:
+            enabled: false
+            pagination_parameter: _page
+            client_enable: true
+            enabled_parameter_name: pagination
+            items_perpage: 5
 
     patch_formats:
         json: ['application/merge-patch+json']

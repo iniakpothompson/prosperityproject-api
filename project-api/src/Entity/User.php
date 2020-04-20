@@ -21,6 +21,10 @@ use App\Controller\ResetPasswordAction;
 
 /**
  * @ApiResource(
+ *     attributes={
+ *     "oder"={"name":"ASC"},
+ *     "pagination_items_per_page":20
+ *     }
  *     normalizationContext={
  *                                    "groups"={"get"}
  *                            },
