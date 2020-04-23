@@ -15,7 +15,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 /**
  * @ORM\Entity
  * @ApiResource(
- *     iri="http://schema.org/ProjectImages",
+ *     iri="http://schema.org/UserProfileImages",
  *     normalizationContext={
  *         "groups"={"userprofileimage_object_read"}
  *     },
@@ -66,7 +66,7 @@ class UserProfileImages
      * @var string|null
      *
      * @ApiProperty(iri="http://schema.org/contentUrl")
-     * @Groups({"userprofileimage_object_read"})
+     *
      */
     public $contentUrl;
 
@@ -82,6 +82,7 @@ class UserProfileImages
      * @var string|null
      *
      * @ORM\Column(nullable=true)
+     * @Groups({"get_users"})
      */
     public $filePath;
 
@@ -89,4 +90,57 @@ class UserProfileImages
     {
         return $this->id;
     }
+    public function __toString(): string{
+        return $this->id.':'.$this->filePath;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getContentUrl(): ?string
+    {
+        return $this->contentUrl;
+    }
+    /**
+     * @param string|null $contentUrl
+     */
+    public function setContentUrl(?string $contentUrl): void
+    {
+        $this->contentUrl = $contentUrl;
+    }
+    /**
+     * @return File|null
+     */
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param File|null $file
+     */
+    public function setFile(?File $file): void
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFilePath(): ?string
+    {
+        return '/images/usersImages/'.$this->filePath;
+    }
+
+    /**
+     * @param string|null $filePath
+     */
+    public function setFilePath(?string $filePath): void
+    {
+        $this->filePath = $filePath;
+    }
+
+
+
+
 }

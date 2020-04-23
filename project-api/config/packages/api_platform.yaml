@@ -26,12 +26,16 @@ api_platform:
     collection:
         pagination:
             enabled: false
-            pagination_parameter: _page
-            client_enable: true
+            page_parameter_name: _page
+            client_enabled: true
             enabled_parameter_name: pagination
-            items_perpage: 5
+            items_per_page: 5
 
     patch_formats:
         json: ['application/merge-patch+json']
+
+    exception_to_status:
+        App\Exception\EmptyBodyException: 400
+        App\Exception\InvalidTokenConfirmation: 404
 
 

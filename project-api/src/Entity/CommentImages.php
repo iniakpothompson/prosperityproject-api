@@ -82,11 +82,63 @@ class CommentImages
      * @var string|null
      *
      * @ORM\Column(nullable=true)
+     * @Groups({"get_comment_with_author"})
      */
     public $filePath;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getContentUrl(): ?string
+    {
+        return $this->contentUrl;
+    }
+
+    /**
+     * @param string|null $contentUrl
+     */
+    public function setContentUrl(?string $contentUrl): void
+    {
+        $this->contentUrl = $contentUrl;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param File|null $file
+     */
+    public function setFile(?File $file): void
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFilePath(): ?string
+    {
+        return '/images/commentImages/'.$this->filePath;
+    }
+
+    /**
+     * @param string|null $filePath
+     */
+    public function setFilePath(?string $filePath): void
+    {
+        $this->filePath = $filePath;
+    }
+    public function __toString(): string{
+        return $this->id.':'.$this->filePath;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,13 +14,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *     normalizationContext={
+ *                      "groups"={"get","get_ministry"}
+ *     },
+ *  denormalizationContext={
+ *                      "groups"={"edit_ministry"}
+ *                  },
  *     itemOperations={
  *          "get",
  *          "delete"={"access_control"="is_granted('ROLE_ADMIN')"},
  *          "put"={
  *                  "access_control"="is_granted('ROLE_MINISTRY_DESK_OFFICER') or object.getUser()==user",
  *                  "denormalizationContext"={
- *                      "groups"={"edit"}
+ *                      "groups"={"edit_ministry"}
  *                  }
  *                 },
  *
@@ -27,7 +34,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     collectionOperations={
  *          "get"={
  *                 "normalizationContext"={
- *                      "groups"={"get"}
+ *                      "groups"={"edit_ministry","get_ministry"}
  *                  }
  *     },
  *          "post"={"access_control"="is_granted('ROLE_MINISTRY_DESK_OFFICER')"}
@@ -44,25 +51,26 @@ class Ministries
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get"})
+     * @Groups({"get_ministry","get_Projects_under_ministry"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get","edit"})
+     * @Groups({"get_ministry","edit_ministry","get_Projects_under_ministry"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get"})
+     * @Groups({"get_ministry","get_Projects_under_ministry","edit_ministry"})
      */
     private $code;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Projects", mappedBy="ministryid")
-     * @Groups({"projects_get"})
+     * @Groups({"get_Projects_under_ministry"})
+     * @ApiSubresource()
      */
     private $projects;
 
@@ -74,8 +82,9 @@ class Ministries
     /**
      * @ORM\OneToOne(targetEntity=MinistryImage::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
+     * @ApiSubresource()
      * @ApiProperty(iri="http://schema.org/image")
-     * @Groups({"get"})
+     * @Groups({"get","get_ministry","edit_ministry"})
      */
     private $image;
 
@@ -161,5 +170,8 @@ class Ministries
         $this->image = $image;
 
         return $this;
+    }
+    public function __toString(): string{
+        return $this->name;
     }
 }

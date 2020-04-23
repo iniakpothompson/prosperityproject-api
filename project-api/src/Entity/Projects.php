@@ -19,27 +19,43 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *     normalizationContext={
+ *                       "groups"={"get_Projects_under_ministry","get_projects"}
+ *     },
+ *     denormalizationContext={
+ *              "groups"={"edit_project","post_project"}
+ *     },
  *     itemOperations={
  *          "get",
  *          "delete",
  *          "put"={
  *                      "access_control"="is_granted('ROLE_MINISTRY_DESK_OFFICER') and object.user==getUser",
  *                      " denormalizationContext"={
- *                                                  "groups"={"edit"}
+ *                                                  "groups"={"edit_project"}
  *                                              },
  *                      "normalizationContext"={
- *                                              "groups"={"get"}
+ *                                              "groups"={"get_project"}
  *                                          }
  *                 }
  *
  *     },
+ *
  *     collectionOperations={
  *          "get"={
  *                     " normalizationContext"={
- *                                                  "groups"={"get"}
+ *                                                  "groups"={"get","get_projects"}
  *                                             }
  *                },
- *          "post"={"access_control"="is_granted('ROLE_MINISTRY_DESK_OFFICER')"}
+ *          "post"={"access_control"="is_granted('ROLE_MINISTRY_DESK_OFFICER')",
+ *                      "denormalizationContext"={
+ *              "groups"={"post_project"}
+ *     }
+ *     },
+ *           "api_ministries_projects_get_subresource"={
+ *                                                                   "normalizationContext"={
+ *                                                                               "groups"={"get_Projects_under_ministry"}
+ *                                                                              }
+ *                                          }
  *
  *     },
  *
@@ -49,68 +65,74 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiFilter(BooleanFilter::class, properties={"makepublic"})
  * @ORM\Entity(repositoryClass="App\Repository\ProjectsRepository")
  */
-class Projects implements AuthorEntityInterface
+class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get"})
+     * @Groups({"get_project","post_project","get_Projects_under_ministry"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get","edit","get_comment_with_author"})
+     * @Groups({"get_project","edit_project","post_project","get_comment_with_author","get_Projects_under_ministry"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get","edit","get_comment_with_author"})
+     * @Groups({"get_project","edit_project","post_project","get_comment_with_author","get_Projects_under_ministry"})
      */
     private $community;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get","edit","get_comment_with_author"})
+     * @Groups({"get_project","edit_project","post_project","get_comment_with_author","get_Projects_under_ministry"})
      */
     private $location;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get","edit","get_comment_with_author"})
+     * @Groups({"get_project","edit_project","post_project","get_comment_with_author","get_Projects_under_ministry"})
      */
     private $lga;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"get","edit"})
+     * @Groups({"get_project","edit_project","post_project","get_Projects_under_ministry"})
      */
     private $startdate;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"get","edit"})
+     * @Groups({"get_project","edit_project","get_Projects_under_ministry","post_project"})
      *
      */
     private $expectedenddate;
 
     /**
+     * @ORM\Column(type="date")
+     * @Groups({"get_Projects_under_ministry","get_project","edit_project","post_project"})
+     */
+    private $uploaddate;
+
+    /**
      * @ORM\Column(type="string", length=500)
-     * @Groups({"get","edit"})
+     * @Groups({"get_project","edit_project", "post_project","get_Projects_under_ministry"})
      */
     private $projectsummary;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"get","edit"})
+     * @Groups({"get_project","edit_project","post_project"})
      */
     private $makepublic;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Ministries", inversedBy="projectImages")
-     * @Groups({"get"})
+     * @Groups({"get_project","edit_project","post_project","get_Projects_under_ministry"})
      */
     private $ministryid;
 
@@ -122,14 +144,15 @@ class Projects implements AuthorEntityInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="projectid", orphanRemoval=true)
-     * @Groups({"get"})
+     * @Groups({"get_project","get_Projects_under_ministry"})
      * @ApiSubresource()
      */
     private $comments;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ProjectPayments", mappedBy="projectid", orphanRemoval=true)
-     * @Groups({"get"})
+     * @Groups({"get_project","post_project","get_Projects_under_ministry"})
+     * @ApiSubresource()
      */
     private $payments;
 
@@ -138,22 +161,25 @@ class Projects implements AuthorEntityInterface
      *
      * @ORM\ManyToOne(targetEntity=ProjectImages::class)
      * @ORM\JoinColumn(nullable=true)
+     * @ApiSubresource()
      * @ApiProperty(iri="http://schema.org/image")
-     * @Groups({"project_image_get"})
+     * @Groups({"get_projects","post_project","get_Projects_under_ministry"})
      */
     public $image;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
-     * @Groups({"get"})
+     * @Groups({"get_project","post_project","edit_project","get_Projects_under_ministry"})
      */
     private $cost;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="project")
-     * @Groups({"get"})
+     * @Groups({"get_project","post_project","get_Projects_under_ministry"})
      */
     private $user;
+
+
 
     public function __construct()
     {
@@ -161,6 +187,8 @@ class Projects implements AuthorEntityInterface
         $this->userid = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->payments = new ArrayCollection();
+        $this->contractor = new ArrayCollection();
+        $this->pro_engineer = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -378,7 +406,7 @@ class Projects implements AuthorEntityInterface
         return $this;
     }
 
-    public function getCost(): string
+    public function getCost(): ?string
     {
         return $this->cost;
     }
@@ -390,7 +418,7 @@ class Projects implements AuthorEntityInterface
         return $this;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -401,5 +429,19 @@ class Projects implements AuthorEntityInterface
         return $this;
     }
 
+
+    public function getUploaddate(): ?\DateTimeInterface
+    {
+        return $this->uploaddate;
+    }
+
+    public function setPublished(\DateTimeInterface $update): PublishedDateEntityInterface
+    {
+        $this->uploaddate=$update;
+        return $this;
+    }
+    public function __toString(): string{
+        return $this->title;
+    }
 
 }

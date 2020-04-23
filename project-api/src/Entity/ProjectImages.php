@@ -3,49 +3,35 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\CreateProjectImageAction;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use App\Controller\CreateProjectImageAction;
+
 /**
- * @ORM\Entity
+ * @ORM\Entity()
+ * @Vich\Uploadable()
  * @ApiResource(
- *     iri="http://schema.org/ProjectImages",
- *     normalizationContext={
- *         "groups"={"projectimage_object_read"}
+ *     attributes={
+ *         "order"={"id": "ASC"},
+ *         "formats"={"json", "jsonld", "form"={"multipart/form-data"}}
  *     },
  *     collectionOperations={
+ *         "get",
  *         "post"={
+ *             "method"="POST",
+ *             "path"="/images/projectImages",
  *             "controller"=CreateProjectImageAction::class,
- *             "deserialize"=false,
- *
- *             "validation_groups"={"Default", "projectimage_object_create"},
- *             "openapi_context"={
- *                 "requestBody"={
- *                     "content"={
- *                         "multipart/form-data"={
- *                             "schema"={
- *                                 "type"="object",
- *                                 "properties"={
- *                                     "file"={
- *                                         "type"="string",
- *                                         "format"="binary"
- *                                     }
- *                                 }
- *                             }
- *                         }
- *                     }
- *                 }
- *             }
- *         },
- *         "get"
+ *             "defaults"={"_api_receive"=false}
+ *         }
  *     },
  *     itemOperations={
- *         "get"
+ *         "get",
+ *         "delete"={
+ *             "access_control"="is_granted('ROLE_MINISTRY_DESK_OFFICER')"
+ *         }
  *     }
  * )
  * @Vich\Uploadable
@@ -54,39 +40,75 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class ProjectImages
 {
     /**
-     * @var int|null
-     *
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @ORM\Id
      */
-    protected $id;
+    private $id;
 
     /**
-     * @var string|null
-     *
-     * @ApiProperty(iri="http://schema.org/contentUrl")
-     * @Groups({"projectimage_object_read"})
+     * @Vich\UploadableField(mapping="projectImages", fileNameProperty="url")
+     * @Assert\NotNull()
      */
-    public $contentUrl;
+    private $file;
 
     /**
-     * @var File|null
-     *
-     * @Assert\NotNull(groups={"projectimage_object_create"})
-     * @Vich\UploadableField(mapping="projectImages", fileNameProperty="filePath")
-     */
-    public $file;
-
-    /**
-     * @var string|null
-     *
      * @ORM\Column(nullable=true)
+     * @Groups({"get_Projects_under_ministry","get_projects"})
      */
-    public $filePath;
+    private $url;
 
-    public function getId(): ?int
+    /**
+     * @var phase
+     * @ORM\Column(nullable=true, type="string", length=10)
+     * @Groups({"get_Projects_under_ministry"})
+     */
+    private $phase;
+
+    public function getId()
     {
         return $this->id;
     }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile($file): void
+    {
+        $this->file = $file;
+    }
+
+    public function getUrl()
+    {
+        return '/images/projectImages/' . $this->url;
+    }
+
+    public function setUrl($url): void
+    {
+        $this->url = $url;
+    }
+
+    public function __toString()
+    {
+        return $this->id . ':' . $this->url;
+    }
+
+    /**
+     * @return phase
+     */
+    public function getPhase(): ?string
+    {
+        return $this->phase;
+    }
+
+    /**
+     * @param phase $phase
+     */
+    public function setPhase(phase $phase): void
+    {
+        $this->phase = $phase;
+    }
+
 }

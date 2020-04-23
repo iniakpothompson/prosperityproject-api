@@ -1,0 +1,16 @@
+easy_admin:
+    entities:
+#        # List the entity class name you want to manage
+        - App\Entity\Comment
+        - App\Entity\CommentImages
+        - App\Entity\Projects
+        - App\Entity\ProjectImages
+        - App\Entity\ProjectPayments
+        - App\Entity\Ministries
+        - App\Entity\MinistryImage
+        - App\Entity\User
+        - App\Entity\UserProfileImages
+        - App\Entity\Education
+        - App\Entity\Certificate
+        - App\Entity\Experience
+

@@ -24,9 +24,9 @@ use App\Controller\ResetPasswordAction;
  *     attributes={
  *     "oder"={"name":"ASC"},
  *     "pagination_items_per_page":20
- *     }
+ *     },
  *     normalizationContext={
- *                                    "groups"={"get"}
+ *                                    "groups"={"get","get_users"}
  *                            },
  *     itemOperations={
  *          "get"={
@@ -56,7 +56,8 @@ use App\Controller\ResetPasswordAction;
  *     },
  *     collectionOperations={
  *                      "get"={
- *                      "access_control"="is_granted('ROLE_COMMISSIONER') or is_granted('ROLE_GOVERNOR')"
+ *                      "access_control"="is_granted('ROLE_COMMISSIONER') or is_granted('ROLE_GOVERNOR')",
+ *                      "groups"={"get_users"}
  *     },
  *          "post"={
  *                      "access_control"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
@@ -83,7 +84,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get"})
+     * @Groups({"get","get_Projects_under_ministry"})
      */
     private $id;
 
@@ -94,46 +95,34 @@ class User implements UserInterface
      * @Assert\Length(max="50", maxMessage="Name longer than expected, allowed characters 50",
      * groups={"post","edit"}
      * )
-     * @Groups({"get","edit","post","get_comment_with_author","get_user_edu","get_user_cert"})
+     * @Groups({"get_users","edit","post","get_comment_with_author","get_user_edu","get_user_cert","get_Projects_under_ministry"})
      */
     private $name;
 
-    /**
-     * @Assert\NotNull(groups={"post"})
-     * @Assert\NotBlank(groups={"post"})
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max="300", maxMessage="This Field cannot be longer than expected, allowed characters 300",
-     * groups={"post","edit"}
-     * )
-     * @Groups({"get","edit","post",})
-     */
-    private $careerobjs;
+
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Assert\NotNull(groups={"post"})
      * @Assert\NotBlank(groups={"post"})
-     * @Groups({"get","edit","post"})
+     * @Groups({"get_users","edit","post"})
      */
     private $sex;
 
     /**
      * @ORM\Column(type="string", length=30, nullable=false)
-     * @Groups({"get","edit","post"})
+     * @Groups({"get_users","edit","post","get_Projects_under_ministry"})
      * @Assert\NotNull(groups={"post"})
      * @Assert\NotBlank(groups={"post"})
      */
     private $designation;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     * @Assert\NotNull(groups={"post"})
-     * @Assert\NotBlank(groups={"post"})
-     * @Groups({"get","edit","post"})
-     *
-     */
-    private $dob;
 
+    /**
+     * @ORM\Column(name="is_active", type="boolean")
+     * @Groups({"get_users"})
+     */
+    private $isActive;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotNull(groups={"post"})
@@ -141,7 +130,7 @@ class User implements UserInterface
      * @Assert\Length(max="15", maxMessage="This Field cannot be longer than expected, allowed characters 15",
      *     groups={"post","edit"}
      *     )
-     * @Groups({"get","edit","post"})
+     * @Groups({"get_users","edit","post"})
      */
     private $phone;
 
@@ -153,10 +142,18 @@ class User implements UserInterface
      * @Assert\Length(max="50", maxMessage="This Field cannot be longer than expected, allowed characters 50",
      *                  groups={"post"}
      * )
-     * @Groups({"get","get_comment_with_author","post"})
+     * @Groups({"get_users","get_comment_with_author","post"})
      */
     private $email;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Assert\NotNull(groups={"post"})
+     * @Assert\NotBlank(groups={"post"})
+     * @Groups({"get_users","edit","post"})
+     *
+     */
+    private $dob;
     /**
      *
      * @ORM\Column(type="string", length=500)
@@ -210,14 +207,25 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Experience", mappedBy="userid", orphanRemoval=true)
-     * @Groups({"get","edit","post"})
+     * @Groups({"get_users","edit","post","get_Projects_under_ministry"})
      * @ApiSubresource()
      */
     private $experience;
 
     /**
+     * @Assert\NotNull(groups={"post"})
+     * @Assert\NotBlank(groups={"post"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(max="300", maxMessage="This Field cannot be longer than expected, allowed characters 300",
+     * groups={"post","edit"}
+     * )
+     * @Groups({"get_users","edit","post",})
+     */
+    private $careerobjs;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Education", mappedBy="userid", orphanRemoval=true)
-     * @Groups({"get","post"})
+     * @Groups({"get_users","post"})
      * @ApiSubresource()
      *
      */
@@ -225,13 +233,13 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Projects", mappedBy="userid")
-     * @Groups({"project_comments_get","post"})
+     * @Groups({"project_comments_get","post","get_users"})
      */
     private $projects;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
-     * @Groups({"comments_get","post"})
+     * @Groups({"comments_get","post","get_users"})
      */
     private $comments;
 
@@ -241,37 +249,34 @@ class User implements UserInterface
      * @ORM\ManyToOne(targetEntity=UserProfileImages::class)
      * @ORM\JoinColumn(nullable=true)
      * @ApiProperty(iri="http://schema.org/image")
-     * @Groups({"get","post"})
+     * @ApiSubresource()
+     * @Groups({"get","post","get_users"})
      */
     public $image;
 
     /**
      * @ORM\Column(type="simple_array", nullable=false, length=200)
-     * @Groups({"get","post","edit"})
+     * @Groups({"get_users","post","edit"})
      */
     private $roles;
 
-    /**
-     * @ORM\Column(name="is_active", type="boolean")
-     * @Groups({"get"})
-     */
-    private $isActive;
+
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Projects", mappedBy="user")
-     * @Groups({"projects_get","post"})
+     * @Groups({"projects_get","post","get_users"})
      */
     private $project;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Ministries", mappedBy="user")
-     * @Groups({"get","post","edit"})
+     * @Groups({"get_users","post","edit"})
      */
     private $ministries;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Certificate", mappedBy="user", orphanRemoval=true)
-     * @Groups({"get","post"})
+     * @Groups({"get_users","post"})
      */
     private $cert;
 
@@ -286,8 +291,11 @@ class User implements UserInterface
     private $confirmationToken;
 
     /**
-     * @return mixed
+     * @ORM\OneToMany(targetEntity="App\Entity\CommentReply", mappedBy="replyer", orphanRemoval=true)
      */
+    private $commentReplies;
+
+
     public function getPasswordChangeDate()
     {
         return $this->passwordChangeDate;
@@ -332,6 +340,8 @@ class User implements UserInterface
         $this->project = new ArrayCollection();
         $this->ministries = new ArrayCollection();
         $this->cert = new ArrayCollection();
+        $this->commentReplies = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -729,6 +739,39 @@ class User implements UserInterface
     {
         return $this->name;
     }
+
+    /**
+     * @return Collection|CommentReply[]
+     */
+    public function getCommentReplies(): Collection
+    {
+        return $this->commentReplies;
+    }
+
+    public function addCommentReply(CommentReply $commentReply): self
+    {
+        if (!$this->commentReplies->contains($commentReply)) {
+            $this->commentReplies[] = $commentReply;
+            $commentReply->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentReply(CommentReply $commentReply): self
+    {
+        if ($this->commentReplies->contains($commentReply)) {
+            $this->commentReplies->removeElement($commentReply);
+            // set the owning side to null (unless already changed)
+            if ($commentReply->getUser() === $this) {
+                $commentReply->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 
 
 }

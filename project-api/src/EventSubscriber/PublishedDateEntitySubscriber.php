@@ -24,7 +24,7 @@ class PublishedDateEntitySubscriber implements EventSubscriberInterface
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if (!$entity instanceof PublishedDateEntityInterface || in_array([Request::METHOD_POST,Request::METHOD_PUT ])!== $method) {
+        if (!$entity instanceof PublishedDateEntityInterface || !in_array($method,[Request::METHOD_POST,Request::METHOD_PUT ])) {
             return;
         }
 

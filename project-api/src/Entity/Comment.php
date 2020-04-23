@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -13,16 +16,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={
  *                             "groups"={"get_comment_with_author"}
  *                          },
+ *     denormalizationContext={
+ *                                              "groups"={"comment_write"}
+ *                                          },
  *     itemOperations={
  *          "get",
  *          "delete",
  *          "put"={
  *                  "access_control"="is_granted('ROLE_COMMENTATOR') and object.getUserid==user",
  *                  "denormalizationContext"={
- *                                              "groups"={"edit"}
+ *                                              "groups"={"edit_comment"}
  *                                          },
  *                  "normalizationContext"={
- *                                              "groups"={"get"}
+ *                                              "groups"={"get_comment"}
  *                                          }
  *                }
  *
@@ -31,11 +37,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "get"={
  *                  "access_control"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
  *                  "normalizationContext"={
- *                                              "groups"={"get"}
+ *                                              "groups"={"get_comment"}
  *                                          }
  *                },
  *
- *          "post"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY')"},
+ *          "post"={
+ *                  "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *                  "denormalizationContext"={
+ *                                              "groups"={"comment_write"}
+ *                                          }
+ *     },
  *          "api_projects_comments_get_subresource"={
  *                                                      "normalizationContext"={
  *                                                                               "groups"={"get_comment_with_author"}
@@ -52,27 +63,27 @@ class Comment implements AuthorEntityInterface, PublishedDateEntityInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get_comment_with_author"})
+     * @Groups({"get_comment_with_author","comment_write","get_comment_with_reply"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=800)
-     * @Groups({"get_comment_with_author","edit"})
+     * @Groups({"get_comment_with_author","edit","comment_write","get_comment_with_reply"})
      */
     private $message;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get_comment_with_author"})
+     * @Groups({"get_comment_with_author","comment_write","get_comment_with_reply"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Projects", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get_comment_with_author"})
+     * @Groups({"get_comment_with_author","comment_write","get_comment_with_reply"})
      */
     private $projectid;
 
@@ -81,15 +92,28 @@ class Comment implements AuthorEntityInterface, PublishedDateEntityInterface
      *
      * @ORM\ManyToOne(targetEntity=CommentImages::class)
      * @ORM\JoinColumn(nullable=true)
+     * @ApiSubresource()
      * @ApiProperty(iri="http://schema.org/image")
-     * @Groups({"get_comment_with_author"})
+     * @Groups({"get_comment_with_author","comment_write"})
      */
     public $image;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"get_comment_with_author"})
      */
     private $date;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CommentReply", mappedBy="coment_id", orphanRemoval=true)
+     * @ApiSubresource()
+     */
+    private $commentReplies;
+
+    public function __construct()
+    {
+        $this->commentReplies = new ArrayCollection();
+    }
 
 
 
@@ -137,6 +161,7 @@ class Comment implements AuthorEntityInterface, PublishedDateEntityInterface
     public function setPublished(\DateTimeInterface $published): PublishedDateEntityInterface
     {
         $this->date=$published;
+        return $this;
     }
 
     public function getDate(): ?\DateTimeInterface
@@ -144,5 +169,38 @@ class Comment implements AuthorEntityInterface, PublishedDateEntityInterface
         return $this->date;
     }
 
+    /**
+     * @return Collection|CommentReply[]
+     */
+    public function getCommentReplies(): Collection
+    {
+        return $this->commentReplies;
+    }
+
+    public function addCommentReply(CommentReply $commentReply): self
+    {
+        if (!$this->commentReplies->contains($commentReply)) {
+            $this->commentReplies[] = $commentReply;
+            $commentReply->setComentId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentReply(CommentReply $commentReply): self
+    {
+        if ($this->commentReplies->contains($commentReply)) {
+            $this->commentReplies->removeElement($commentReply);
+            // set the owning side to null (unless already changed)
+            if ($commentReply->getComentId() === $this) {
+                $commentReply->setComentId(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString(): string{
+        return substr($this->message,0,50).'.....';
+    }
 
 }

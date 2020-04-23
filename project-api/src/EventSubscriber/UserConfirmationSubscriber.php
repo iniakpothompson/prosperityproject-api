@@ -4,6 +4,7 @@ namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\UserConfirmation;
+use App\Exception\InvalidTokenConfirmation;
 use App\Repository\UserRepository;
 use App\Security\UserConfirmationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,7 +62,7 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
          * User was not found with the provided confirmation token
          */
         if(!$user){
-            throw new NotFoundHttpException();
+            throw new InvalidTokenConfirmation();
         }
 
 //        $user->setConfirmationToken(null);
