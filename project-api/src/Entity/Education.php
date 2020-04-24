@@ -170,7 +170,7 @@ class Education
     /**
      * @return Collection|Certificate[]
      */
-    public function getCertgrade(): Collection
+    public function getCertgrade(): ?Collection
     {
         return $this->certgrade;
     }
@@ -196,5 +196,9 @@ class Education
         }
 
         return $this;
+    }
+    public function __toString() :string
+    {
+        return $this->edulevel;
     }
 }

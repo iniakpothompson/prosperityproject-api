@@ -7,6 +7,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -116,7 +117,7 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
      * @ORM\Column(type="date")
      * @Groups({"get_Projects_under_ministry","get_project","edit_project","post_project"})
      */
-    private $uploaddate;
+    private $published;
 
     /**
      * @ORM\Column(type="string", length=500)
@@ -244,24 +245,24 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
         return $this;
     }
 
-    public function getStartdate(): ?\DateTimeInterface
+    public function getStartdate(): ?DateTimeInterface
     {
         return $this->startdate;
     }
 
-    public function setStartdate(\DateTimeInterface $startdate): self
+    public function setStartdate(DateTimeInterface $startdate): self
     {
         $this->startdate = $startdate;
 
         return $this;
     }
 
-    public function getExpectedenddate(): ?\DateTimeInterface
+    public function getExpectedenddate(): ?DateTimeInterface
     {
         return $this->expectedenddate;
     }
 
-    public function setExpectedenddate(\DateTimeInterface $expectedenddate): self
+    public function setExpectedenddate(DateTimeInterface $expectedenddate): self
     {
         $this->expectedenddate = $expectedenddate;
 
@@ -430,14 +431,14 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
     }
 
 
-    public function getUploaddate(): ?\DateTimeInterface
+    public function getPublished(): ?DateTimeInterface
     {
-        return $this->uploaddate;
+        return $this->published;
     }
 
-    public function setPublished(\DateTimeInterface $update): PublishedDateEntityInterface
+    public function setPublished(DateTimeInterface $update): PublishedDateEntityInterface
     {
-        $this->uploaddate=$update;
+        $this->published=$update;
         return $this;
     }
     public function __toString(): string{

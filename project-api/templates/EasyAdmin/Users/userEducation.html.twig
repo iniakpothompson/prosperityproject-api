@@ -1,0 +1,8 @@
+{% for Education in value%}
+    {{ Education.id }}
+    {{ Education.school }}
+    {{ Education.edulevel }}
+    {{ Education.startdate |date('Y-m-d') }}
+    {{ Education.enddate |date('Y-m-d')}}
+
+{% endfor %}

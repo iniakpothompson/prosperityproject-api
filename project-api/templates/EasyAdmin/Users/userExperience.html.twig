@@ -1,0 +1,9 @@
+{% for Experience in value%}
+    {{ Experience.id }}
+    {{ Experience.title }}
+    {{ Experience.description }}
+    {{ Experience.startdate|date('Y-m-d') }}
+    {{ Experience.enddate|date('Y-m-d')}}
+    {{ Experience.jobplace }}
+    {{ Experience.userid }}
+{% endfor %}

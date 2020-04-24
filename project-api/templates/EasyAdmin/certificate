@@ -1,0 +1,7 @@
+{% for Certificate in value%}
+    {{ Certificate.id }}
+    {{ Certificate.subject }}
+    {{ Certificate.grade }}
+    {{ Certificate.educationid }}
+    {{ Certificate.user }}
+{% endfor %}

@@ -102,7 +102,7 @@ class Comment implements AuthorEntityInterface, PublishedDateEntityInterface
      * @ORM\Column(type="date")
      * @Groups({"get_comment_with_author"})
      */
-    private $date;
+    private $published;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CommentReply", mappedBy="coment_id", orphanRemoval=true)
@@ -160,13 +160,13 @@ class Comment implements AuthorEntityInterface, PublishedDateEntityInterface
 
     public function setPublished(\DateTimeInterface $published): PublishedDateEntityInterface
     {
-        $this->date=$published;
+        $this->published=$published;
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getPublished(): ?\DateTimeInterface
     {
-        return $this->date;
+        return $this->published;
     }
 
     /**

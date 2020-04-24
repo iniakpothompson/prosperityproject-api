@@ -69,7 +69,7 @@ class Ministries
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Projects", mappedBy="ministryid")
-     * @Groups({"get_Projects_under_ministry"})
+     *
      * @ApiSubresource()
      */
     private $projects;

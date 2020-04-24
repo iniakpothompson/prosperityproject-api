@@ -1,0 +1,8 @@
+{% for Comment in value %}
+    {{ comment.id }}
+    {{ comment.projectid }}
+    {{ Comment.message }}
+    {{ Comment.published|date('Y-m-d') }}
+    {{ Comment.user }}
+
+{% endfor %}

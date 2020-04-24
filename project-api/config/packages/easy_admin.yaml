@@ -1,16 +1,144 @@
 easy_admin:
     entities:
 #        # List the entity class name you want to manage
-        - App\Entity\Comment
-        - App\Entity\CommentImages
-        - App\Entity\Projects
-        - App\Entity\ProjectImages
-        - App\Entity\ProjectPayments
-        - App\Entity\Ministries
-        - App\Entity\MinistryImage
-        - App\Entity\User
-        - App\Entity\UserProfileImages
-        - App\Entity\Education
-        - App\Entity\Certificate
-        - App\Entity\Experience
+        Comment:
+            class: App\Entity\Comment
+            list:
+                actions: [{name: 'Show'}]
+            show:
+                fields:
+                     - 'id'
+                     - 'message'
+                     - 'published'
+                     - { property: 'commentReply', template: 'EasyAdmin/Comments/commentReply.html.twig'}
+                     - 'user'
+                     - { property: 'image', type: 'image', label: 'Images' }
+        CommentImages:
+            class: App\Entity\CommentImages
+            list:
+                fields:
+                    - 'id'
+                    - { property: 'filePath', type: 'image', label: 'Image'}
+            form:
+                fields:
+                    - { property: 'file', type: 'Vich\UploaderBundle\Form\Type\VichFileType'}
+        Projects:
+            class: App\Entity\Projects
+            list:
+                actions: [{name: 'Show'}]
+            show:
+                fields:
+                    - 'id'
+                    - 'title'
+                    - 'projectsummary'
+                    - { property: 'comments', template: 'EasyAdmin/Comments/projectComments.html.twig'}
+                    - 'user'
+                    - 'payments'
+                    - 'cost'
+                    - 'published'
+                    - 'startdate'
+                    - 'expectedenddate'
+                    - 'community'
+                    - 'location'
+                    - 'image'
+        ProjectImages:
+            class: App\Entity\ProjectImages
+            list:
+                fields:
+                    - 'id'
+                    - { property: 'url', type: 'image', label: 'Image'}
+            form:
+                fields:
+                    - { property: 'file', type: 'Vich\UploaderBundle\Form\Type\VichFileType'}
+        ProjectPayments:
+            class: App\Entity\ProjectPayments
+            list:
+                actions: [{name: 'Show'}]
+            show:
+                fields:
+                    - 'id'
+                    - 'purpose'
+                    - 'amount'
+                    - 'phase'
+                    - 'projectid'
+        Ministries:
+            class: App\Entity\Ministries
+            list:
+            show:
+                fields:
+                    - 'id'
+                    - 'name'
+                    - { property: 'image', type: 'image', base_path: '/images/ministryimages/'}
+
+        MinistryImage:
+            class: App\Entity\MinistryImage
+            list:
+                fields:
+                    - 'id'
+                    - { property: 'filePath', type: 'image', label: 'Image'}
+            form:
+                fields:
+                    - { property: 'file', type: 'Vich\UploaderBundle\Form\Type\VichFileType'}
+        User:
+            class: App\Entity\User
+            controller: App\Controller\UserAdminController
+            list:
+                actions: [{name: 'Show'}]
+            show:
+                fields:
+                    - 'id'
+                    - 'name'
+                    - 'sex'
+                    - 'email'
+                    - 'phone'
+                    - 'isActive'
+                    - { property: 'education', template: 'EasyAdmin/Users/userEducation.html.twig'}
+                    - { property: 'experience', template: 'EasyAdmin/Users/userExperience.html.twig'}
+                    - { property: 'image', label: 'Image', base_path: '/images/usersImages/'}
+        UserProfileImages:
+            class: App\Entity\UserProfileImages
+            list:
+                fields:
+                    - 'id'
+                    - { property: 'filePath', type: 'image', label: 'Image'}
+            form:
+                fields:
+                    - { property: 'file', type: 'Vich\UploaderBundle\Form\Type\VichFileType'}
+        Education:
+            class: App\Entity\Education
+            list:
+                actions: [{ name: 'Show'}]
+            show:
+                fields:
+                      - 'id'
+                      - 'school'
+                      - 'eduLevel'
+                      - 'startdate'
+                      - 'enddate'
+                      - 'userid'
+                      - { property: 'certgrade', template: 'EasyAdmin/certificate' }
+        Certificate:
+            class: App\Entity\Certificate
+            list:
+                actions: [{ name: 'Show'}]
+            show:
+                fields:
+                      - 'id'
+                      - 'subject'
+                      - 'grade'
+                      - 'educationid'
+                      - 'user'
+        Experience:
+            class: App\Entity\Experience
+            list:
+                actions: [{ name: 'Show'}]
+            show:
+                fields:
+                     - 'id'
+                     - 'title'
+                     - 'description'
+                     - 'startdate'
+                     - 'enddate'
+                     - 'jobplace'
+                     - 'userid'
 

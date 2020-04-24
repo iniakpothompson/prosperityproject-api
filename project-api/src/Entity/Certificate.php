@@ -125,7 +125,7 @@ class Certificate
         return $this;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -134,6 +134,10 @@ class Certificate
     {
         $this->user = $user;
 
+    }
+    public function __toString() :string 
+    {
+        return $this->grade;
     }
 
 }

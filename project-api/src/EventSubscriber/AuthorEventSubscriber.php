@@ -37,6 +37,7 @@ public function __construct(TokenStorageInterface $token)
         $storedUser=$this->token->getToken()->getUser();
 //        $refreshToken=$this->token->
 
+
         if(!$entity instanceof AuthorEntityInterface || Request::METHOD_POST!=$method){
             return;
         }

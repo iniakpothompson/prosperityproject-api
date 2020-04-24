@@ -91,7 +91,7 @@ class CommentReply implements AuthorEntityInterface, PublishedDateEntityInterfac
      * @ORM\Column(type="date")
      * @Groups({"get_comment_with_reply","post_reply"})
      */
-    private $date;
+    private $published;
 
     public function getId(): ?int
     {
@@ -137,14 +137,14 @@ class CommentReply implements AuthorEntityInterface, PublishedDateEntityInterfac
     /**
      * @return mixed
      */
-    public function getDate():? \DateTimeInterface
+    public function getPublished():? \DateTimeInterface
     {
-        return $this->date;
+        return $this->published;
     }
 
     public function setPublished(\DateTimeInterface $published): PublishedDateEntityInterface
     {
-        $this->date=$published;
+        $this->published=$published;
         return $this;
     }
     public function __toString(): string{

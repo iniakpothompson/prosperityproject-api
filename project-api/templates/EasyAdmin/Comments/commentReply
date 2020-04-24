@@ -1,0 +1,7 @@
+{% for CommentReply in value%}
+    {{ CommentReply.id }}
+    {{ CommentReply.commentid }}
+    {{ CommentReply.reply_message }}
+    {{ CommentReply.published|date('Y-m-d') }}
+    {{ CommentReply.user }}
+{% endfor %}
