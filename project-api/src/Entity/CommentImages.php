@@ -86,6 +86,11 @@ class CommentImages
      */
     public $filePath;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $description;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -140,5 +145,17 @@ class CommentImages
     }
     public function __toString(): string{
         return $this->id.':'.$this->filePath;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

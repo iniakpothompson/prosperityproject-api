@@ -90,7 +90,8 @@ class Comment implements AuthorEntityInterface, PublishedDateEntityInterface
     /**
      * @var CommentImages|null
      *
-     * @ORM\ManyToOne(targetEntity=CommentImages::class)
+     * @ORM\ManyToMany(targetEntity=CommentImages::class)
+     * @ORM\JoinTable()
      * @ORM\JoinColumn(nullable=true)
      * @ApiSubresource()
      * @ApiProperty(iri="http://schema.org/image")
@@ -113,6 +114,7 @@ class Comment implements AuthorEntityInterface, PublishedDateEntityInterface
     public function __construct()
     {
         $this->commentReplies = new ArrayCollection();
+        $this->image=new ArrayCollection();
     }
 
 
@@ -202,5 +204,20 @@ class Comment implements AuthorEntityInterface, PublishedDateEntityInterface
     public function __toString(): string{
         return substr($this->message,0,50).'.....';
     }
+    public function getImage(): Collection
+    {
+        return $this->image;
+    }
+
+    public function addImage(?CommentImages $image)
+    {
+        $this->image->add($image);
+    }
+
+    public function removeImage(CommentImages $image)
+    {
+        $this->image->removeElement($image);
+    }
+
 
 }

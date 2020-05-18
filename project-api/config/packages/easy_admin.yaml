@@ -64,11 +64,13 @@ easy_admin:
         Ministries:
             class: App\Entity\Ministries
             list:
+                actions: [{name: 'Show'}]
             show:
                 fields:
                     - 'id'
                     - 'name'
-                    - { property: 'image', type: 'image', base_path: '/images/ministryimages/'}
+                    - { property: 'image', type: 'image', base_path: 'images/ministryimages/'}
+                    - {property: 'projects', template: 'EasyAdmin/Projects/projects.html.twig'}
 
         MinistryImage:
             class: App\Entity\MinistryImage

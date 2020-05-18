@@ -25,6 +25,9 @@ use App\Controller\ResetPasswordAction;
  *     "oder"={"name":"ASC"},
  *     "pagination_items_per_page":20
  *     },
+ *     denormalizationContext={
+ *                                              "groups"={"edit","put-reset-password"}
+ *                                           },
  *     normalizationContext={
  *                                    "groups"={"get","get_users"}
  *                            },
@@ -120,7 +123,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(name="is_active", type="boolean")
-     * @Groups({"get_users"})
+     * @Groups({"get_users","edit"})
      */
     private $isActive;
     /**
@@ -291,7 +294,7 @@ class User implements UserInterface
     private $confirmationToken;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CommentReply", mappedBy="replyer", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\CommentReply", mappedBy="user", orphanRemoval=true)
      */
     private $commentReplies;
 
@@ -767,6 +770,23 @@ class User implements UserInterface
                 $commentReply->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function getImage(): ?UserProfileImages
+    {
+        return $this->image;
+    }
+
+    public function setImage(?UserProfileImages $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

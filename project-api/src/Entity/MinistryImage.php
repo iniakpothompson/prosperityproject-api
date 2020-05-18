@@ -50,6 +50,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *     }
  * )
  * @Vich\Uploadable
+ *
  */
 class MinistryImage
 {
@@ -128,7 +129,7 @@ class MinistryImage
      */
     public function getFilePath(): ?string
     {
-        return "/images/ministryImages".$this->filePath;
+        return "/images/ministryImages/".$this->filePath;
     }
 
     /**

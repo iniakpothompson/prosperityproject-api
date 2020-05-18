@@ -1,0 +1,608 @@
+main {
+  font-family:Montserrat;
+  font-weight:bolder;
+  color:black;
+  background-color:rgb(255, 255, 255);
+}
+
+body {
+  padding:0px;
+  background-color:rgb(0, 0, 0);
+}
+
+.header {
+  text-align:center;
+  font-family:Roboto;
+}
+
+.jumbotron {
+  background-color:blue !important;
+  color:white !important;
+  background-image:url('images/projectImg2.jpg');
+  background-repeat:no-repeat;
+  background-size:100%;
+  background-blend-mode:multiply;
+}
+
+.defaultHeader {
+  font-family:Roboto;
+  text-align:left;
+  background-color:rgba(255, 255, 255, 0.096);
+}
+
+
+#firstHeaderDiv {
+  float:right;
+  background-color: black;
+}
+
+#secondHeaderDiv {
+  float:left;
+  background-color:orange;
+}
+
+.a {
+  color:blue;
+}
+
+.b {
+  color:green;
+}
+
+
+
+input {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  text-align:left;
+  background-color: rgba(0, 0, 0, 0.507);
+  color: rgb(221, 221, 221);
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border:0px;
+  border-radius:5px;
+}
+
+select {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align:center;
+  background-color: rgba(0, 0, 0, 0.507);
+  color: rgb(221, 221, 221);
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border:0px;
+  border-radius:5px;
+}
+
+input[type=date] {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align:left;
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border-radius:5px;
+}
+
+input[type=name] {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align:left;
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border-radius:5px;
+}
+
+.custom-select {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align:left;
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border-radius:5px;
+}
+
+.form-row {
+  padding:10px;
+  font-size:14px;
+  text-align:left;
+}
+
+
+.governorForm {
+  margin-top:150px;
+}
+
+.ministryForm {
+  margin-top:150px;
+}
+
+.signIn {
+  color:orange;
+}
+
+.signIn1 {
+  color:red;
+}
+
+.signIn2 {
+  color:blue;
+}
+
+.signIn3 {
+  color:green;
+}
+
+
+footer {
+    clear: both;
+    position: relative;
+    margin-top: 0px;
+}
+
+.name {
+  color: rgba(24, 22, 22, 0.911);
+  font-size:30px;
+}
+
+.modal-body {
+  padding:40px;
+  text-align:center;
+}
+
+.modal-title {
+  text-align:center !important;
+  color:rgb(219, 50, 50);
+}
+
+.modal-title2 {
+  text-align:center !important;
+  color:rgb(62, 118, 223);
+}
+
+
+textarea {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  text-align:left !important;
+  padding: 5px 20px !important;
+  width: 100% !important;
+  margin: 8px 0 !important;
+  box-sizing: border-box !important;
+}
+
+#headerDiv {
+  background-image: url('images/Naira.jpg');
+  background-blend-mode: multiply;
+  background-position-x: left;
+  background-position-y: center;
+  position:static;
+}
+
+#stack-top{
+  margin-top:10px;
+    z-index: 1;
+    height:250px;
+    background-color: #FACB0B;
+    text-align:center;
+    padding:20px;
+}
+
+
+.comments {
+  font-family:Montserrat;
+  font-size:13px;
+  font-weight:normal;
+  color:black;
+}
+
+#blogDiv {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+button {
+  border: 0px;
+  padding:10px;
+  background-color:red;
+  color:white;
+  width:100%;
+}
+
+.viewProjectsBtn {
+  border-radius:5px;
+  font-size:18px;
+  background-color:rgb(18, 64, 212);
+}
+
+.publicViewBtn {
+  border-radius:5px;
+  font-size:18px;
+  background-color:rgb(35, 236, 17);
+  color:black;
+}
+
+.publicViewBtn:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.viewProjectsBtn:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.signOutBtn {
+  width:70%;
+  border-radius:5px;
+  font-size:14px;
+}
+
+.uploadBtn {
+  width:100%;
+  border-radius:5px;
+  font-size:14px;
+}
+
+.uploadBtn:hover {
+  background-color:rgb(199, 4, 4);
+}
+
+.signOutBtn:hover {
+  background-color:rgb(243, 40, 40);
+}
+
+#projectsDiv {
+  background-image:url('images/projectImg2.jpg');
+  background-blend-mode:darken; 
+  background-color:blue;
+  width:100%;
+  height:200px;
+  background-size:630px;
+  padding:70px;
+}
+
+#publicViewDiv {
+  background-image:url('images/publicView.jpg');
+  background-blend-mode:soft-light; 
+  background-color:green;
+  width:100%;
+  height:200px;
+  background-size:600px;
+  padding:70px;
+}
+
+#ministryBtn {
+  margin-bottom:5px;
+}
+
+.ministryBtn {
+  background-color:red;
+  color:rgb(250, 245, 245);
+  font-weight:bolder;
+}
+
+#projects {
+  padding:10px;
+  text-align:center;
+}
+
+#ministryNameDiv {
+  margin-left:15%;
+  margin-right:-15%;
+  padding:3px;
+  background-color:red;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+
+}
+
+.publicBtn {
+  border-radius:5px;
+  font-size:18px;
+  background-color:rgb(255, 255, 255);
+  color:black;
+}
+
+.btnDiv {
+  margin-top:0px;
+  background-color:white;
+  margin-left:-20px;
+  padding:20px;
+  width:100%;
+  height:300px;
+  overflow:auto;
+}
+
+.ministryBtn {
+  padding:10px;
+  width:90%;
+  margin-bottom:10px;
+  margin-left:15px;
+  background-color:red;
+}
+
+.ministryBtn:hover {
+  background-color:rgb(151, 6, 6);
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.ministryNameDiv {
+  padding:1px;
+  width:70%;
+  margin-left:15%;
+}
+
+.ministryContentDiv {
+  text-align:left;
+}
+
+table {
+  width:90%;
+}
+
+thead {
+  background-color:white;
+  color:red;
+}
+
+tbody {
+  background-color:rgba(0, 0, 0, 0.527);
+  color:white;
+}
+
+td {
+  padding:15px;
+}
+
+.moreBtn {
+  background-color:rgb(255, 255, 255);
+  width:15%;
+  color:black;
+  border-radius:5px;
+  margin-left:35%;
+}
+
+.moreBtn:hover {
+  background-color:rgb(214, 214, 214); 
+  width:20%;
+}
+
+#morebooks {
+  margin-top:10px;
+  margin-left:50px;
+}
+
+
+#morebooks:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  
+}
+
+#morebooks span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+  
+}
+
+#morebooks span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#morebooks:hover span {
+  padding-right: 25px;
+  color:rgb(175, 6, 6) !important;
+  
+}
+
+#morebooks:hover span:after {
+  opacity: 1;
+  right: 0; 
+}
+
+#photoDiv1{
+  width: 500px;
+  height: 300px;
+  position: relative;
+  margin: 20px;
+  background-size: 100% 70%;
+  background-image:url('images/publicView.jpg');
+  background-repeat: no-repeat;
+}
+
+#photoDiv2{
+  width: 500px;
+  height: 300px;
+  position: relative;
+  margin: 20px;
+  background-size: 100% 70%;
+  background-position: cover;
+  background-image:url('images/finance.jpg');
+  background-repeat: no-repeat;
+}
+
+#photoDiv3{
+  width: 500px;
+  height: 300px;
+  position: relative;
+  margin: 20px;
+  background-size: 100% 70%;
+  background-position: cover;
+  background-image:url('images/projectImg.jpg');
+  background-repeat: no-repeat;
+}
+
+#phaseDiv{
+  width: 50%;
+  height: 20%;            
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color:black;
+  color:white;
+  padding:20px;
+}
+
+.projectTable {
+  width:100%;
+  text-align:center;
+}
+
+.projectTableHead {
+  background-color:rgb(190, 5, 5);
+  color:white;
+}
+
+.projectTableBody {
+  background-color:rgba(235, 235, 235, 0.575);
+  color:black;
+}
+
+.projectTableItem {
+  font-size:14px;
+}
+
+.profileLinkBtn {
+  background-color:blue;
+  font-size:12px;
+  border-radius:5px;
+}
+
+.profileLinkBtn:hover {
+  background-color:rgb(2, 2, 92);
+}
+
+#grow { 
+  transition: all .2s ease-in-out; 
+  }
+  
+  #grow:hover { 
+  transform: scale(1.1); 
+  }
+
+.viewProfileBtn {
+  font-size:12px;
+  width:40%;
+  background-color:rgba(255, 255, 255, 0);
+  border:2px solid white;
+  border-radius:10px;
+  color:red;
+}
+
+.viewProfileBtn:hover {
+ background-color:white;
+ color:white;
+}
+
+.listSpan {
+  color:red;
+  font-weight:bolder;
+}
+
+.experienceList {
+  font-size:14px;
+  font-weight:bolder;
+}
+
+.profilePara {
+  font-size:14px;
+  font-weight:normal;
+}
+
+#passportDiv {
+  background-image:url('images/passport.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.receiptBtn {
+  border:1px solid red;
+  color:red;
+  border-radius:10px;
+  width:80%;
+  background-color:white;
+}
+
+.receiptBtn:hover {
+  background-color:rgb(255, 0, 0);
+  color:white;
+}
+
+#formDiv {
+  margin-bottom: 10px;
+}
+
+.indexPara {
+  font-family:Roboto;
+  font-weight:normal;
+  font-size:17px;
+  color:rgb(22, 21, 21);
+  text-align:center;
+}
+
+.indexSubHeadings {
+  font-family:Roboto;
+  font-weight:bold;
+  color: rgb(22, 21, 21);
+}
+
+li {
+  font-family:Roboto;
+  text-align:left;
+}
+
+#userDiv {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  background-color:white;
+  padding:40px;
+  border-radius:5px;
+  transition: all .2s ease-in-out; 
+  }
+  
+  #userDiv:hover { 
+    transform: scale(1.1); 
+    }
+}
+
+iframe {
+  width:100%;
+}
+
+#loginDiv {
+  margin-top:15px;
+  background-color:white;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  border-radius:10px;
+  padding:30px;
+  height:400px;
+  overflow:auto;
+}
+
+#loginDiv2 {
+  margin-top:15px;
+  background-color:white;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  border-radius:10px;
+  padding:30px;
+  height:210px;
+  overflow:auto;
+}
+
+
+.allBtn {
+  font-size:13px;
+  width:100%;
+  background-color:red;
+  border:2px solid white;
+  border-radius:10px;
+  color:white;
+}
+
+.allBtn:hover {
+  background-color:rgb(168, 1, 1);
+}

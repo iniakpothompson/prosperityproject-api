@@ -5,6 +5,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -16,7 +17,13 @@ use App\Controller\CreateProjectImageAction;
  * @ApiResource(
  *     attributes={
  *         "order"={"id": "ASC"},
- *         "formats"={"json", "jsonld", "form"={"multipart/form-data"}}
+ *         "formats"={"json", "jsonld", "form"={"multipart/form-data"}},
+ *          "properties"={
+ *                          "file"={
+ *                          "type"="string",
+ *                          "format"="binary"
+ *                                  }
+ *                      }
  *     },
  *     collectionOperations={
  *         "get",
@@ -24,7 +31,8 @@ use App\Controller\CreateProjectImageAction;
  *             "method"="POST",
  *             "path"="/images/projectImages",
  *             "controller"=CreateProjectImageAction::class,
- *             "defaults"={"_api_receive"=false}
+ *             "defaults"={"_api_receive"=false},
+ *
  *         }
  *     },
  *     itemOperations={
@@ -47,12 +55,14 @@ class ProjectImages
     private $id;
 
     /**
+     *
      * @Vich\UploadableField(mapping="projectImages", fileNameProperty="url")
      * @Assert\NotNull()
      */
-    private $file;
+    public $file;
 
     /**
+     * @var string|null
      * @ORM\Column(nullable=true)
      * @Groups({"get_Projects_under_ministry","get_projects"})
      */
@@ -64,6 +74,11 @@ class ProjectImages
      * @Groups({"get_Projects_under_ministry"})
      */
     private $phase;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $description;
 
     public function getId()
     {
@@ -82,7 +97,7 @@ class ProjectImages
 
     public function getUrl()
     {
-        return '/images/projectImages/' . $this->url;
+        return '/images/projectImages/'.$this->url;
     }
 
     public function setUrl($url): void
@@ -106,9 +121,21 @@ class ProjectImages
     /**
      * @param phase $phase
      */
-    public function setPhase(phase $phase): void
+    public function setPhase($phase)
     {
         $this->phase = $phase;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
     }
 
 }

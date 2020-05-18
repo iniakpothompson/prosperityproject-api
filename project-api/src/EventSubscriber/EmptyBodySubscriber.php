@@ -29,7 +29,7 @@ class EmptyBodySubscriber implements EventSubscriberInterface
         $route = $request->get('_route');
 
         if (!in_array($method, [Request::METHOD_POST, Request::METHOD_PUT]) ||
-            !in_array($request->getContentType(), ['html', 'form']) ||
+            in_array($request->getContentType(), ['html', 'form','json', 'jsonld']) ||
             substr($route, 0, 3) !== 'api') {
             return;
         }

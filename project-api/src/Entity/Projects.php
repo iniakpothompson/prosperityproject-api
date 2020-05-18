@@ -160,8 +160,9 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
     /**
      * @var ProjectImages|null
      *
-     * @ORM\ManyToOne(targetEntity=ProjectImages::class)
+     * @ORM\ManyToMany(targetEntity=ProjectImages::class)
      * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinTable()
      * @ApiSubresource()
      * @ApiProperty(iri="http://schema.org/image")
      * @Groups({"get_projects","post_project","get_Projects_under_ministry"})
@@ -190,6 +191,7 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
         $this->payments = new ArrayCollection();
         $this->contractor = new ArrayCollection();
         $this->pro_engineer = new ArrayCollection();
+        $this->image=new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -443,6 +445,21 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
     }
     public function __toString(): string{
         return $this->title;
+    }
+
+    public function getImage(): Collection
+    {
+        return $this->image;
+    }
+
+    public function addImage(?ProjectImages $image)
+    {
+        $this->image->add($image);
+    }
+
+    public function removeImage(ProjectImages $image)
+    {
+        $this->image->removeElement($image);
     }
 
 }
