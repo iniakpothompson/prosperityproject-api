@@ -23,6 +23,8 @@ api_platform:
 #                type:  ministries
     eager_loading:
         enabled: true
+# Max number of joined relations before EagerLoading throws a RuntimeException.
+        max_joins: 40
     collection:
         pagination:
             enabled: false

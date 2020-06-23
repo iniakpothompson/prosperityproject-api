@@ -23,10 +23,10 @@ use App\Controller\ResetPasswordAction;
  * @ApiResource(
  *     attributes={
  *     "oder"={"name":"ASC"},
- *     "pagination_items_per_page":20
+ *
  *     },
  *     denormalizationContext={
- *                                              "groups"={"edit","put-reset-password"}
+ *                                              "groups"={"edit","put-reset-password","post"}
  *                                           },
  *     normalizationContext={
  *                                    "groups"={"get","get_users"}
@@ -71,7 +71,7 @@ use App\Controller\ResetPasswordAction;
  *     }
  * )
  *
- * @ApiFilter(SearchFilter::class, properties={"id":"exact", "name":"exact", "email":"exact"})
+ * @ApiFilter(SearchFilter::class, properties={"id":"exact", "name":"exact", "email":"exact","designation":"exact"})
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  *
  */
@@ -81,6 +81,7 @@ class User implements UserInterface
     const ROLE_MINISTRY_DESK_OFFICER='ROLE_MINISTRY_DESK_OFFICER';
     const ROLE_COMMENTATOR='ROLE_COMMENTATOR';
     const ROLE_COMMISSIONER='ROLE_COMMISSIONER';
+    const ROLE_PERSONNEL='ROLE_PERSONNEL';
     const ROLE_ADMIN='ROLE_ADMIN';
     const DEFAULT_ROLE=[self::ROLE_COMMENTATOR];
     /**
@@ -228,17 +229,13 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Education", mappedBy="userid", orphanRemoval=true)
-     * @Groups({"get_users","post"})
+     * @Groups({"get_users","post","edit","get_Projects_under_ministry"})
      * @ApiSubresource()
      *
      */
     private $education;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Projects", mappedBy="userid")
-     * @Groups({"project_comments_get","post","get_users"})
-     */
-    private $projects;
+
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
@@ -334,7 +331,7 @@ class User implements UserInterface
         $this->experience = new ArrayCollection();
         $this->education = new ArrayCollection();
         $this->certgrade = new ArrayCollection();
-        $this->projects = new ArrayCollection();
+
         $this->comments = new ArrayCollection();
         $this->roles=self::DEFAULT_ROLE;
         $this->isActive = false;
@@ -516,17 +513,17 @@ class User implements UserInterface
 
 
     /**
-     * @return Collection|Projects[]
+     * @return Collection|Project[]
      */
-    public function getProjects(): Collection
+    public function getProject(): Collection
     {
-        return $this->projects;
+        return $this->project;
     }
 
     public function addProject(Projects $project): self
     {
-        if (!$this->projects->contains($project)) {
-            $this->projects[] = $project;
+        if (!$this->project->contains($project)) {
+            $this->project[] = $project;
             $project->addUserid($this);
         }
 
@@ -535,8 +532,8 @@ class User implements UserInterface
 
     public function removeProject(Projects $project): self
     {
-        if ($this->projects->contains($project)) {
-            $this->projects->removeElement($project);
+        if ($this->project->contains($project)) {
+            $this->project->removeElement($project);
             $project->removeUserid($this);
         }
 
@@ -625,13 +622,6 @@ class User implements UserInterface
         $this->confirmpassword = $confirmpassword;
     }
 
-    /**
-     * @return Collection|Projects[]
-     */
-    public function getProject(): Collection
-    {
-        return $this->project;
-    }
 
     /**
      * @return Collection|Ministries[]

@@ -6,6 +6,14 @@ vich_uploader:
             uri_prefix: /images/projectImages
             upload_destination: '%kernel.project_dir%/public/images/projectImages'
             namer: Vich\UploaderBundle\Naming\OrignameNamer
+        receiptFiles:
+            uri_prefix: /files/receipts
+            upload_destination: '%kernel.project_dir%/public/files/receipts'
+            namer: Vich\UploaderBundle\Naming\OrignameNamer
+        agreementFiles:
+            uri_prefix: /files/project-agreements
+            upload_destination: '%kernel.project_dir%/public/files/project-agreements'
+            namer: Vich\UploaderBundle\Naming\OrignameNamer
         commentImages:
             uri_prefix: /images/commentImages
             upload_destination: '%kernel.project_dir%/public/images/commentImages'

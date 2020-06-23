@@ -7,12 +7,13 @@ namespace App\EventSubscriber;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use ApiPlatform\Core\Util\RequestAttributesExtractor;
 use App\Entity\MinistryImage;
+use App\Entity\ProjectAgreementFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
-class ResolveMinistryImageContentUrlSubscriber
+class ResolveMinistryImageContentUrlSubscriber implements EventSubscriberInterface
 {
     private $storage;
 
@@ -39,22 +40,22 @@ class ResolveMinistryImageContentUrlSubscriber
             return;
         }
 
-        if (!($attributes = RequestAttributesExtractor::extractAttributes($request)) || !\is_a($attributes['resource_class'], MinistryImage::class, true)) {
+        if (!($attributes = RequestAttributesExtractor::extractAttributes($request)) || !\is_a($attributes['resource_class'], ProjectAgreementFile::class, true)) {
             return;
         }
 
-        $minimages = $controllerResult;
+        $agreementFiles = $controllerResult;
 
-        if (!is_iterable($minimages)) {
-            $minimages = [$minimages];
+        if (!is_iterable($agreementFiles)) {
+            $agreementFiles = [$agreementFiles];
         }
 
-        foreach ($minimages as $minimage) {
-            if (!$minimage instanceof MinistryImage) {
+        foreach ($agreementFiles as $agreementFile) {
+            if (!$agreementFile instanceof ProjectAgreementFile) {
                 continue;
             }
 
-            $minimage->contentUrl = $this->storage->resolveUri($minimage, 'file');
+            $agreementFile->contentUrl = $this->storage->resolveUri($agreementFile, 'file');
         }
     }
 }

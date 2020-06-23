@@ -13,15 +13,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use ApiPlatform\Core\Annotation\ApiSubresource;
-use App\Controller\CreateProjectImageAction;
-
+use App\Controller\CreateReceiptsAction;
 /**
  * @ORM\Entity()
  * @Vich\Uploadable()
  * @ApiResource(
- *      iri="http://schema.org/ProjectImages",
+ *      iri="http://schema.org/ProjectPaymmentReceiptFile",
  *  normalizationContext={
- *         "groups"={"projectimage_object_read"}
+ *         "groups"={"projectPaymentReceiptfile_object_read"}
  *     },
  *     attributes={
  *         "order"={"id": "ASC"},
@@ -34,11 +33,14 @@ use App\Controller\CreateProjectImageAction;
  *                      }
  *     },
  *     collectionOperations={
+ *                               "api_receiptfile_details_receipt_files_get_subresource"={
+ *                                      "normalizationContext"={"groups"={"projectPaymentReceiptfile_object_read"}}
+ *                          },
  *         "get",
  *         "post"={
- *             "validation_groups"={"Default", "projectimage_object_create"},
+ *             "validation_groups"={"Default", "projectPaymentReceiptfile_object_create"},
  *             "deserialize"=false,
- *             "controller"=CreateProjectImageAction::class,
+ *             "controller"=CreateReceiptsAction::class,
  *             "openapi_context"={
  *                 "requestBody"={
  *                     "content"={
@@ -58,9 +60,6 @@ use App\Controller\CreateProjectImageAction;
  *             }
  *
  *         },
- *     "api_image_details_images_get_subresource"={
- *                                                   "normalizationContext"={"groups"={"projectimage_object_read"}}
- *                                                      },
  *
  *     },
  *     itemOperations={
@@ -72,20 +71,19 @@ use App\Controller\CreateProjectImageAction;
  * )
  * @Vich\Uploadable
  */
-
-class ProjectImages
+class ProjectPaymentReceiptFiles
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"projectimage_object_read","projectimage_object_create"})
+     * @Groups({"projectPaymentReceiptfile_object_read","projectPaymentReceiptfile_object_create"})
      */
     private $id;
 
     /**
      *
-     * @Vich\UploadableField(mapping="projectImages", fileNameProperty="url")
+     * @Vich\UploadableField(mapping="receiptFiles", fileNameProperty="url")
      * @Assert\NotNull()
      */
     public $file;
@@ -94,27 +92,28 @@ class ProjectImages
      * @var string|null
      *
      * @ApiProperty(iri="http://schema.org/contentUrl")
-     * @Groups({"commentimage_object_read"})
+     * @Groups({"projectPaymentReceiptfile_object_read"})
      */
     public $contentUrl;
 
     /**
      * @var string|null
      * @ORM\Column(nullable=true)
-     * @Groups({"projectimage_object_read","projectimage_object_create"})
+     * @Groups({"projectPaymentReceiptfile_object_read","projectPaymentReceiptfile_object_create"})
      */
     private $url;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\ImageDetails", mappedBy="image")
-     * @Groups({"projectimage_object_read","projectimage_object_create"})
-     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\ReceiptfileDetails", mappedBy="receiptFile")
+     * @Groups({"projectPaymentReceiptfile_object_read","projectPaymentReceiptfile_object_create"})
      */
-    private $imageDetails;
+    private $fileDetails;
+
 
     public function __construct()
     {
-        $this->imageDetails = new ArrayCollection();
+        $this->fileDetails = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
 
@@ -135,7 +134,7 @@ class ProjectImages
 
     public function getUrl()
     {
-        return '/images/projectImages/'.$this->url;
+        return '/files/receipts/'.$this->url;
     }
     /**
      * @return string|null
@@ -163,35 +162,42 @@ class ProjectImages
     }
 
     /**
-     * @return Collection|ImageDetails[]
+     * @return Collection|ReceiptfileDetails[]
      */
-    public function getImageDetails(): Collection
+    public function getFileDetails(): Collection
     {
-        return $this->imageDetails;
+        return $this->fileDetails;
     }
 
-    public function addImageDetail(ImageDetails $imageDetail): self
+    public function addFileDetails(ReceiptfileDetailsDetails $fileDetails): self
     {
-        if (!$this->imageDetails->contains($imageDetail)) {
-            $this->imageDetails[] = $imageDetail;
-            $imageDetail->addImage($this);
+        if (!$this->fileDetails->contains($fileDetails)) {
+            $this->fileDetails[] = $fileDetails;
+            $fileDetails->addReceiptFile($this);
         }
 
         return $this;
     }
 
-    public function removeImageDetail(ImageDetails $imageDetail): self
+    public function removeFileDetail(ReceiptfileDetails $fileDetails): self
     {
-        if ($this->imageDetails->contains($imageDetail)) {
-            $this->imageDetails->removeElement($imageDetail);
-            $imageDetail->removeImage($this);
+        if ($this->fileDetails->contains($fileDetails)) {
+            $this->fileDetails->removeElement($fileDetails);
+            $fileDetails->removeReceiptFile($this);
         }
 
         return $this;
     }
 
+    public function addFileDetail(ReceiptfileDetails $fileDetail): self
+    {
+        if (!$this->fileDetails->contains($fileDetail)) {
+            $this->fileDetails[] = $fileDetail;
+            $fileDetail->addReceiptFile($this);
+        }
 
-
+        return $this;
+    }
 
 
 }

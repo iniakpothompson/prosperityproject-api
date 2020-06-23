@@ -4,8 +4,8 @@
     {{ Projects.community }}
     {{ Projects.location }}
     {{ Projects.lga }}
-    {{ Projects.startdate }}
-    {{ Projects.expectedenddate }}
+    {{ Projects.startdate|date('Y-m-d') }}
+    {{ Projects.expectedenddate|date('Y-m-d') }}
     {{ Projects.projectsummary }}
-    {{ Projects.image }}
+    
 {% endfor %}

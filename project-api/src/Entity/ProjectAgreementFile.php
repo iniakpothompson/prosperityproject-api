@@ -2,7 +2,6 @@
 
 
 namespace App\Entity;
-
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,16 +11,14 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use ApiPlatform\Core\Annotation\ApiSubresource;
-use App\Controller\CreateProjectImageAction;
-
+use App\Controller\CreateProjectAgreementFileAction;
 /**
  * @ORM\Entity()
  * @Vich\Uploadable()
  * @ApiResource(
- *      iri="http://schema.org/ProjectImages",
+ *      iri="http://schema.org/ProjectAgreementFile",
  *  normalizationContext={
- *         "groups"={"projectimage_object_read"}
+ *         "groups"={"projectAgreementfile_object_read"}
  *     },
  *     attributes={
  *         "order"={"id": "ASC"},
@@ -36,9 +33,9 @@ use App\Controller\CreateProjectImageAction;
  *     collectionOperations={
  *         "get",
  *         "post"={
- *             "validation_groups"={"Default", "projectimage_object_create"},
+ *             "validation_groups"={"Default", "projectAgreementfile_object_create"},
  *             "deserialize"=false,
- *             "controller"=CreateProjectImageAction::class,
+ *             "controller"=CreateProjectAgreementFileAction::class,
  *             "openapi_context"={
  *                 "requestBody"={
  *                     "content"={
@@ -58,9 +55,6 @@ use App\Controller\CreateProjectImageAction;
  *             }
  *
  *         },
- *     "api_image_details_images_get_subresource"={
- *                                                   "normalizationContext"={"groups"={"projectimage_object_read"}}
- *                                                      },
  *
  *     },
  *     itemOperations={
@@ -72,20 +66,19 @@ use App\Controller\CreateProjectImageAction;
  * )
  * @Vich\Uploadable
  */
-
-class ProjectImages
+class ProjectAgreementFile
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"projectimage_object_read","projectimage_object_create"})
+     * @Groups({"projectAgreementfile_object_read","projectAgreementfile_object_create"})
      */
     private $id;
 
     /**
      *
-     * @Vich\UploadableField(mapping="projectImages", fileNameProperty="url")
+     * @Vich\UploadableField(mapping="agreementFiles", fileNameProperty="url")
      * @Assert\NotNull()
      */
     public $file;
@@ -94,28 +87,17 @@ class ProjectImages
      * @var string|null
      *
      * @ApiProperty(iri="http://schema.org/contentUrl")
-     * @Groups({"commentimage_object_read"})
+     * @Groups({"projectAgreementfile_object_read"})
      */
     public $contentUrl;
 
     /**
      * @var string|null
      * @ORM\Column(nullable=true)
-     * @Groups({"projectimage_object_read","projectimage_object_create"})
+     * @Groups({"get_Projects_under_ministry","get_projects","projectAgreementfile_object_read","projectAgreementfile_object_create"})
      */
     private $url;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\ImageDetails", mappedBy="image")
-     * @Groups({"projectimage_object_read","projectimage_object_create"})
-     *
-     */
-    private $imageDetails;
-
-    public function __construct()
-    {
-        $this->imageDetails = new ArrayCollection();
-    }
 
 
     public function getId()
@@ -135,7 +117,7 @@ class ProjectImages
 
     public function getUrl()
     {
-        return '/images/projectImages/'.$this->url;
+        return '/files/project-agreements/'.$this->url;
     }
     /**
      * @return string|null
@@ -161,37 +143,5 @@ class ProjectImages
     {
         return $this->id . ':' . $this->url;
     }
-
-    /**
-     * @return Collection|ImageDetails[]
-     */
-    public function getImageDetails(): Collection
-    {
-        return $this->imageDetails;
-    }
-
-    public function addImageDetail(ImageDetails $imageDetail): self
-    {
-        if (!$this->imageDetails->contains($imageDetail)) {
-            $this->imageDetails[] = $imageDetail;
-            $imageDetail->addImage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImageDetail(ImageDetails $imageDetail): self
-    {
-        if ($this->imageDetails->contains($imageDetail)) {
-            $this->imageDetails->removeElement($imageDetail);
-            $imageDetail->removeImage($this);
-        }
-
-        return $this;
-    }
-
-
-
-
 
 }

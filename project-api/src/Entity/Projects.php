@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     normalizationContext={
- *                       "groups"={"get_Projects_under_ministry","get_projects"}
+ *                       "groups"={"get_Projects_under_ministry","get_projects","edit_project","projectimage_object_read","projectPaymentReceiptfile_object_read"}
  *     },
  *     denormalizationContext={
  *              "groups"={"edit_project","post_project"}
@@ -30,7 +30,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "get",
  *          "delete",
  *          "put"={
- *                      "access_control"="is_granted('ROLE_MINISTRY_DESK_OFFICER') and object.user==getUser",
+ *                      "access_control"="is_granted('ROLE_MINISTRY_DESK_OFFICER') or is_granted('ROLE_ADMIN') or object.user==user",
  *                      " denormalizationContext"={
  *                                                  "groups"={"edit_project"}
  *                                              },
@@ -138,8 +138,10 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
     private $ministryid;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="projectImages")
-     * @Groups({"projectcomment_image_get"})
+     * @ORM\ManyToMany(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinTable()
+     * @Groups({"get_project","post_project","get_Projects_under_ministry","edit_project"})
      */
     private $userid;
 
@@ -165,7 +167,7 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
      * @ORM\JoinTable()
      * @ApiSubresource()
      * @ApiProperty(iri="http://schema.org/image")
-     * @Groups({"get_projects","post_project","get_Projects_under_ministry"})
+     * @Groups({"get_projects","post_project","get_Projects_under_ministry","projectimage_object_read"})
      */
     public $image;
 
@@ -181,6 +183,22 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
      */
     private $user;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\ProjectPaymentReceiptFiles")
+     * @ApiSubresource()
+     * @ApiProperty(iri="http://schema.org/ProjectPaymentReceiptFiles")
+     * @Groups({"get_projects","post_project","get_Projects_under_ministry","projectPaymentReceiptfile_object_read"})
+     */
+    private $projectReceipt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\ProjectAgreementFile")
+     * @ApiProperty(iri="http://schema.org/ProjectAgreementFile")
+     * @ApiSubresource()
+     * @Groups({"get_projects","post_project","get_Projects_under_ministry"})
+     */
+    private $projectAgreement;
+
 
 
     public function __construct()
@@ -192,6 +210,8 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
         $this->contractor = new ArrayCollection();
         $this->pro_engineer = new ArrayCollection();
         $this->image=new ArrayCollection();
+        $this->projectReceipt = new ArrayCollection();
+        $this->projectAgreement = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -460,6 +480,58 @@ class Projects implements AuthorEntityInterface, PublishedDateEntityInterface
     public function removeImage(ProjectImages $image)
     {
         $this->image->removeElement($image);
+    }
+
+    /**
+     * @return Collection|ProjectPaymentReceiptFiles[]
+     */
+    public function getProjectReceipt(): Collection
+    {
+        return $this->projectReceipt;
+    }
+
+    public function addProjectReceipt(ProjectPaymentReceiptFiles $projectReceipt): self
+    {
+        if (!$this->projectReceipt->contains($projectReceipt)) {
+            $this->projectReceipt[] = $projectReceipt;
+        }
+
+        return $this;
+    }
+
+    public function removeProjectReceipt(ProjectPaymentReceiptFiles $projectReceipt): self
+    {
+        if ($this->projectReceipt->contains($projectReceipt)) {
+            $this->projectReceipt->removeElement($projectReceipt);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProjectAgreementFile[]
+     */
+    public function getProjectAgreement(): Collection
+    {
+        return $this->projectAgreement;
+    }
+
+    public function addProjectAgreement(ProjectAgreementFile $projectAgreement): self
+    {
+        if (!$this->projectAgreement->contains($projectAgreement)) {
+            $this->projectAgreement[] = $projectAgreement;
+        }
+
+        return $this;
+    }
+
+    public function removeProjectAgreement(ProjectAgreementFile $projectAgreement): self
+    {
+        if ($this->projectAgreement->contains($projectAgreement)) {
+            $this->projectAgreement->removeElement($projectAgreement);
+        }
+
+        return $this;
     }
 
 }

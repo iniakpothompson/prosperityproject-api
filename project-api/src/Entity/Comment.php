@@ -23,7 +23,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "get",
  *          "delete",
  *          "put"={
- *                  "access_control"="is_granted('ROLE_COMMENTATOR') and object.getUserid==user",
+ *                  "access_control"="is_granted('ROLE_COMMENTATOR') or is_granted('ROLE_ADMIN') and object.getUser==user",
  *                  "denormalizationContext"={
  *                                              "groups"={"edit_comment"}
  *                                          },

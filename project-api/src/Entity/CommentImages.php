@@ -59,6 +59,7 @@ class CommentImages
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      * @ORM\Id
+     * @Groups({"commentimage_object_read"})
      */
     protected $id;
 
@@ -82,7 +83,7 @@ class CommentImages
      * @var string|null
      *
      * @ORM\Column(nullable=true)
-     * @Groups({"get_comment_with_author"})
+     * @Groups({"get_comment_with_author","commentimage_object_read"})
      */
     public $filePath;
 

@@ -59,12 +59,13 @@ class UserProfileImages
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      * @ORM\Id
+     * @Groups({"userprofileimage_object_read"})
      */
     protected $id;
 
     /**
      * @var string|null
-     *
+     * @ApiProperty(iri="http://schema.org/contentUrl")
      * @ApiProperty(iri="http://schema.org/contentUrl")
      *
      */
@@ -82,7 +83,7 @@ class UserProfileImages
      * @var string|null
      *
      * @ORM\Column(nullable=true)
-     * @Groups({"get_users"})
+     * @Groups({"get_users","userprofileimage_object_read"})
      */
     public $filePath;
 

@@ -84,7 +84,7 @@ class Education
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="education")
      * @ORM\JoinColumn(nullable=false)
-     *@Groups({"get_user_edu"})
+     *
      */
     private $userid;
 

@@ -12,11 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={
  *              "groups"={"get_comment_with_reply"}
  *     },
- *    denormalizationContext={
  *
- *          "groups"={"edit_reply","post_reply"}
- *
- *     },
  *      itemOperations={
  *          "get"={
  *              "normalizationContext"={
@@ -63,7 +59,7 @@ class CommentReply implements AuthorEntityInterface, PublishedDateEntityInterfac
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get_comment_with_reply"})
+     * @Groups({"get_comment_with_reply","post_reply"})
      */
     private $id;
 

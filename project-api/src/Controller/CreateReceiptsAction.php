@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Controller;
 
-use App\Entity\ProjectImages;
+namespace App\Controller;
+use App\Entity\ProjectPaymentReceiptFiles;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-final class CreateProjectImageAction 
+class CreateReceiptsAction
 {
-    public function __invoke(Request $request): ProjectImages
+    public function __invoke(Request $request): ProjectPaymentReceiptFiles
     {
         //$em=$this->getDoctrine()->getManager();
         $uploadedFile=$request->files->get('file');
@@ -19,15 +19,15 @@ final class CreateProjectImageAction
             throw new BadRequestHttpException('"file" is required');
         }
 
-        $projectImage=new ProjectImages();
-        $projectImage->file=$uploadedFile;
+        $receiptFiles=new ProjectPaymentReceiptFiles();
+        $receiptFiles->file=$uploadedFile;
 
 //        $projectImage->setPhase($phase);
 //        $projectImage->setDescription($desc);
 //        $em->persist($projectImage);
 //        $em->flush();
 
-        return $projectImage;
+        return $receiptFiles;
 
     }
 
